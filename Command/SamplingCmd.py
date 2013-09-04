@@ -23,11 +23,11 @@ class SamplingCmd(CommandInterface,object):
         
         _e = ExecuteFfmpeg.ExecuteFfmpeg(self.view.filename)
         _e.Run()
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "正在采样 . . .")
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, ["正在采样 . . .",False])
         _e.WaitForProcess()
         
         self.getFrameNumAndFileSize()
-        showmsg = CommonData.MsgHandlec.SPARATE + "采样完成:\n(1)总帧数：" + str(self.__framenum) + "\n(2)文件大小(byte)：" + str(self.__filesize)
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REWRITETEXT, showmsg)
+        showmsg = "采样完成:\n(1)总帧数：" + str(self.__framenum) + "\n(2)文件大小(byte)：" + str(self.__filesize)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REWRITETEXT, [showmsg,True])
 
         

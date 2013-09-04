@@ -12,5 +12,5 @@ class IdentifyVerifyFailed(MsgHandleInterface.MsgHandleInterface,object):
     def HandleMsg(self,bufsize,session):
         "关闭线程"
         showmsg = "认证失败，此次会话结束"
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + showmsg)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         session.stop()

@@ -31,7 +31,7 @@ class RecvDhPubkeyAndSendDhGenerateSuccess(MsgHandleInterface.MsgHandleInterface
                 msghead = self.packetMsg(MagicNum.MsgTypec.AUDITRETURNDHGENERATE, 0)
             session.sockfd.send( msghead )
             showmsg = "生成会话密钥：" + session.sessionkey
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + showmsg)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
     
     def HandleMsg(self,bufsize,session):
         "接受对方传来的dh参数及公钥并生成自己的dh公钥"

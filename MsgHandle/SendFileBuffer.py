@@ -40,7 +40,7 @@ class SendFileBuffer(MsgHandleInterface.MsgHandleInterface,object):
             
             _filename = session.filename[-session.filename[::-1].index("/"):].encode("utf-8")
             showmsg = "文件发送完毕:\n(1)文件名:" + _filename + "\n(2)文件大小(byte):" + str(session.totalbytes)
-            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + showmsg)
+            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         else:
             print "..",len(msgbody)
             msghead = self.packetMsg(MagicNum.MsgTypec.SENDFILEBUFFER,len(msgbody))

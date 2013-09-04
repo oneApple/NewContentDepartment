@@ -12,12 +12,12 @@ class GetVideoSampling:
         self.__u = u
         self.__filename = filename
     
-    def sendViewMsg(self,msg):
+    def sendViewMsg(self,showmsg):
         import wx
         from wx.lib.pubsub  import Publisher
         from GlobalData import CommonData
-        
-        wx.CallAfter(Publisher().sendMessage,CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,msg)     
+        msg = [showmsg,False]
+        wx.CallAfter(Publisher().sendMessage,CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,msg)      
     
     def GetSampling(self):
         "第0帧不采集，帧区间是左闭又开区间，包括左边界，不包括右边界"

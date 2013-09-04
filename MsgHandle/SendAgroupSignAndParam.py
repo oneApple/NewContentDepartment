@@ -59,9 +59,9 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _efm.WaitForProcess()
         
         import os
-        showmsg = CommonData.MsgHandlec.SPARATE +"采样完成:\n(1)总帧数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
+        showmsg = "采样完成:\n(1)总帧数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
                   "\n(2)文件大小(byte)：" + str(os.path.getsize(_meidaPath))
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         
         _sparam = _res[0][1].split(CommonData.MsgHandlec.PADDING)
         import string
@@ -69,7 +69,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         
         _cgvs = GetVideoSampling.GetVideoSampling(_filename[:_filename.index(".")],*_iparam)
         try:
-            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + "Ａ组采样过程:")
+            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "Ａ组采样过程:",True)
             return _res[0][1],CommonData.MsgHandlec.PADDING.join(_cgvs.GetSampling())
         except:
             return _res[0][1],CommonData.MsgHandlec.PADDING.join("")
@@ -97,7 +97,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         showmsg += "\nCP用AP的公钥加密采样参数A"
         showmsg += "\nCP用其私钥加密比特串承诺值"
         showmsg += "\nCP发送加密的A组参数和加密的比特串承诺值，以及公钥加密TID发送给AP"
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + showmsg)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         return _msgbody
     
     def HandleMsg(self,bufsize,session):

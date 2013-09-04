@@ -241,7 +241,6 @@ class MyFrame(wx.Frame):
     def evtBtnReqAuditClick(self,evt):
         _cmd = DataHandleCmd.DataHandleCmd(self,*self.getSamplingParams())
         _cmd.Excute()
-        self.Destroy()
     
     def createLeft3Button(self, panel, vbox):
         _panel = self.createPanel(panel)

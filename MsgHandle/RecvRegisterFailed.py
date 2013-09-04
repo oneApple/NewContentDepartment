@@ -11,4 +11,4 @@ class RecvRegisterFailed(MsgHandleInterface.MsgHandleInterface,object):
         super(RecvRegisterFailed,self).__init__()
     
     def HandleMsg(self,bufsize,session):
-        wx.CallAfter(Publisher().sendMessage,CommonData.ViewPublisherc.REGISTER_TRYAGAIN, CommonData.MsgHandlec.SPARATE + "该用户名已经存在")
+        wx.CallAfter(Publisher().sendMessage,CommonData.ViewPublisherc.REGISTER_TRYAGAIN, "该用户名已经存在",True)

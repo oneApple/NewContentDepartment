@@ -32,4 +32,4 @@ class SendLoginResult(MsgHandleInterface.MsgHandleInterface,object):
             msghead = self.packetMsg(MagicNum.MsgTypec.LOGINFAIL,0)
             session.sockfd.send(msghead)
             showmsg = session.peername + "登录失败"
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + showmsg)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)

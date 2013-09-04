@@ -16,8 +16,8 @@ class RecvObtainFile(MsgHandleInterface.MsgHandleInterface,object):
         
         session.threadtype = CommonData.ThreadType.ACCETPNO
     
-        showmsg = CommonData.MsgHandlec.SPARATE + "开始分发文件(" + recvbuffer + ")"
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg)
+        showmsg = "开始分发文件(" + recvbuffer + ")"
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         
         import SendDhPAndPubkey
         _sdh = SendDhPAndPubkey.SendDhPAndPubkey()

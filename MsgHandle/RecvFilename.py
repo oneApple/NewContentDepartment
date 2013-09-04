@@ -30,8 +30,8 @@ class RecvFilename(MsgHandleInterface.MsgHandleInterface,object):
         session.file = open(_localfilename.encode('utf-8'),"w")
         session.currentbytes = 0
     
-        showmsg = CommonData.MsgHandlec.SPARATE + "开始审核返回文件(" + recvbuffer + ")"
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg)
+        showmsg = "开始审核返回文件(" + recvbuffer + ")"
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         
         import SendDhPAndPubkey
         _sdh = SendDhPAndPubkey.SendDhPAndPubkey()

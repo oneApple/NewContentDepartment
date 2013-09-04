@@ -36,7 +36,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             return True
         else:
             showmsg = "会话密钥验证失败：会话密钥：" + session.sessionkey
-            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + showmsg)
+            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
             return False
     
     def verifySignleSign(self,sampling,sign,session):
@@ -68,15 +68,15 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _efm.WaitForProcess()
         
         import os
-        showmsg = CommonData.MsgHandlec.SPARATE +"采样完成:\n(1)总帧数：" + self.getFrameNum(session.filename) + \
+        showmsg = "采样完成:\n(1)总帧数：" + self.getFrameNum(session.filename) + \
                   "\n(2)文件大小(byte)：" + str(os.path.getsize(_meidaPath))
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         
         showmsg = ["B组采样过程：","C组采样过程："]
         for _param in [_bparam,self.__cparam]:
             _argum = [string.atoi(s) for s in _param[:3]]
             _argum += [string.atof(s) for s in _param[3:]]
-            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + showmsg[len(_hashlist)])
+            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg[len(_hashlist)],True)
             _hashlist.append(self.computeSingleSampling(session, _argum))
             
             
@@ -111,7 +111,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
     
     def compareSamplingHash(self,localhash,recvhash):
         "分组验证"
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + "分组进行比对:")
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,"分组进行比对:",True)
         difList = []
         localhash = localhash.split(CommonData.MsgHandlec.PADDING)
         recvlist = recvhash.split(CommonData.MsgHandlec.PADDING)
@@ -164,7 +164,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             if self.verifySign(session) == True:
                 showmsg = "收到采样结果:\n(1)B组参数：" + ",".join(self.__bparam.split(CommonData.MsgHandlec.PADDING)) + "\n(2)B组采样签名：" + _msglist[1]
                 showmsg += "\n(3)C组参数：" + ",".join(self.__cparam) + "\n(4)C组采样签名：" + self.__csign
-                self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + showmsg)
+                self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
                 msghead = self.packetMsg(MagicNum.MsgTypec.AUDITRETURNSUCCESS,0)
                 session.sockfd.send(msghead)
                 return
