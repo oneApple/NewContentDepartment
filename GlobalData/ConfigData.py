@@ -49,4 +49,3 @@ class ConfigData:
     
 if __name__=='__main__':
     c = ConfigData()
-    print c.GetYVectorFilePath()

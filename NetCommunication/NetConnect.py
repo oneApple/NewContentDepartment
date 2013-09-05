@@ -10,9 +10,10 @@ _metaclass_ = type
 class NetConnect:
     def __init__(self,view):
         self.__Sockfd = socket.socket()
+        self.view = view  
     
     def ChangeView(self,view):
-        self.__view = view    
+        self.view = view    
         
     def ReqConnect(self,name,psw):
         "请求登录"
@@ -42,7 +43,7 @@ class NetConnect:
         
         import wx
         from wx.lib.pubsub  import Publisher
-        wx.CallAfter(Publisher().sendMessage,CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,"请求审核文件(" + _msgbody + ")".encode("utf8"))
+        wx.CallAfter(Publisher().sendMessage,CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,["请求审核文件(" + _msgbody + ")".encode("utf8"),False])
         
     def StartNetConnect(self):
         "连接服务器并开启网络线程"
@@ -64,4 +65,3 @@ class NetConnect:
 if __name__=='__main__':
     filename = "/home/keym/视频/小伙.mpg"
     _msgbody = filename[-filename[::-1].index("/"):].encode("utf-8")
-    print "msgbody",_msgbody,len(_msgbody)

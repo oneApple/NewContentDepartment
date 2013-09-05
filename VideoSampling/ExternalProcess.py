@@ -20,7 +20,6 @@ class ExternalProcess(object):
                 return False  
             return True  
         else:  
-            print '应用程序路径'+self.appPath+'不存在'  
             return False
     
     def waitForProcess(self):
@@ -30,4 +29,3 @@ class ExternalProcess(object):
 if __name__ == '__main__':  
     exeMgr = ExternalProcess(r"C:\Program Files\Tencent\QQ\Bin\QQ.exe")  
     exeMgr.run()  
-    print '程序已成功启动'  

@@ -13,7 +13,7 @@ class MediaTable(DataBaseInterface.DataBaseInterface,object):
         "创建媒体表"
         self.ExcuteCmd("CREATE TABLE MediaTable (name TEXT PRIMARY KEY,agroupParam TEXT,agroupHash TEXT,  \
                                                                        bgroupParam TEXT,bgroupHash TEXT,  \
-                                                                       status INT)")
+                                                                       audituser TEXT,status INT)")
     
     def AddNewMedia(self,value):
         "增加新的媒体"
@@ -40,9 +40,8 @@ class MediaTable(DataBaseInterface.DataBaseInterface,object):
 if __name__=='__main__':
     a = MediaTable()
     a.Connect()
-    #a.ExcuteCmd("drop table MediaTable")
-    #a.CreateTable()
-    #a.AddNewMedia(("14frame.mpeg","sign","signparam","bgroup","bgroupparam"))
-    a.deleteMedia("gaoqing_mpeg1.ts".decode("utf-8"))
-    print a.Search("select * from MediaTable")
+    a.ExcuteCmd("drop table MediaTable")
+    a.CreateTable()
+#    a.AddNewMedia(("14frame.mpeg","sign","signparam","bgroup","bgroupparam"))
+#    a.deleteMedia("8.mpeg".decode("utf-8"))
     a.CloseCon()

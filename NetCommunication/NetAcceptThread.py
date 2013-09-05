@@ -19,7 +19,6 @@ class NetAcceptThread(threading.Thread):
         try:
             self._listenfd.bind((_listenAddress[0],int(_listenAddress[1])))
         except Exception,e:
-            print e
             self._listenfd.close();
             return MagicNum.NetAcceptc.BINDERROR
         
@@ -27,7 +26,6 @@ class NetAcceptThread(threading.Thread):
         while self.__runflag:
             c,addr = self._listenfd.accept()
             s = 'Got connect from:' + str(addr) + "\n"
-            print s
             th = NetThread.NetThread(c.dup(),self,True)
             self.__threadlist.append(th)
             th.start()

@@ -37,4 +37,3 @@ class Chaos:
 if __name__ == '__main__':
     c = Chaos(5,0.12,4)
     c.getChaosArray()
-    print c.getBinaryArray()

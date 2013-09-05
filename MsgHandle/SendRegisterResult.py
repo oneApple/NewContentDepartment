@@ -19,7 +19,6 @@ class SendRegisterResult(MsgHandleInterface.MsgHandleInterface,object):
     
     def addNewCPUser(self,value):
         "添加新用户"
-        print value
         _db = NOUserTable.NOUserTable()
         _db.Connect()
         _db.AddNewUser(value)

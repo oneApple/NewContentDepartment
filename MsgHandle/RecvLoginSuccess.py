@@ -12,6 +12,6 @@ class RecvLoginSuccess(MsgHandleInterface.MsgHandleInterface,object):
     
     def HandleMsg(self,bufsize,session):
         recvbuffer = session.sockfd.recv(bufsize)                                                                                       
-        _permission = int(recvbuffer)
-        wx.CallAfter(Publisher().sendMessage,CommonData.ViewPublisherc.LOGIN_SWITCH,_permission)
+        recvlist = recvbuffer.split(CommonData.MsgHandlec.PADDING)
+        wx.CallAfter(Publisher().sendMessage,CommonData.ViewPublisherc.LOGIN_SWITCH,recvlist)
         

@@ -41,5 +41,4 @@ if __name__ == "__main__":
     r.WritePubkeyStr("name", _s)
     _cfd = ConfigData.ConfigData()
     _rsa = Rsa.Rsa(_cfd.GetKeyPath())
-    print _rsa.DecryptByPrikey(_rsa.EncryptByPubkey("plaintext", "name"))
     

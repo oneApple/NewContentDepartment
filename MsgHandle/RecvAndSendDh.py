@@ -28,7 +28,6 @@ class RecvAndSendDh(MsgHandleInterface.MsgHandleInterface,object):
             from CryptoAlgorithms import HashBySha1
             _hbs = HashBySha1.HashBySha1()
             session.sessionkey = _hbs.GetHash(str(_dhkey.getKey(string.atol(msg[1]))),MagicNum.HashBySha1c.HEXADECIMAL)
-            print session.sessionkey
             _dhpubkey = str(_dhkey.getPubkey())
             msgbody = _dhpubkey + CommonData.MsgHandlec.PADDING + _rsa.SignByPrikey(_dhpubkey)
             msghead = self.packetMsg(MagicNum.MsgTypec.SENDDHPUBKEY, len(msgbody))

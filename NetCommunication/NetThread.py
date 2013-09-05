@@ -19,20 +19,17 @@ class NetThread(threading.Thread):
         
     def run(self):
         "接受消息头之后，得到消息类型，然后选择具体的处理类来处理该消息"
-        print "thread"
         _MsgHandleMap = MsgHandleMap.MsgHandleMap()
         while self.runflag:
             recvbuffer = self.sockfd.recv(struct.calcsize(CommonData.MsgHandlec.MSGHEADTYPE))
             if(len(recvbuffer) != struct.calcsize(CommonData.MsgHandlec.MSGHEADTYPE)):
                 break
             recvmsghead = struct.unpack(CommonData.MsgHandlec.MSGHEADTYPE,recvbuffer)
-            print recvmsghead
             _MsgHandleMap.getMsgHandle(recvmsghead[0]).HandleMsg(recvmsghead[1],self)
         #跳出循环，线程结束，关闭socke
         self.sockfd.close()
         if self.threadtype == CommonData.ThreadType.CONNECTAP:
             self.control.StopNetConnect()
-        print "netthread close"
 
 
     def stop(self):

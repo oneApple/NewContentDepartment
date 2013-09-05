@@ -58,5 +58,4 @@ if __name__ == "__main__":
     s = GetSamplingParams.GetSamplingParams("gaoqing_mpeg2")
     p = s.GetSamplingParams()
     g = GetVideoSampling("gaoqing_mpeg2",*p)
-    print g.GetSampling()
                 

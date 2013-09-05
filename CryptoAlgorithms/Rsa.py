@@ -42,6 +42,4 @@ class Rsa:
 if __name__ == '__main__':
     r = Rsa(".")
     r.GenerateKeypair()
-    print r.DecryptByPrikey(r.EncryptByPubkey("plaintexdsfd"))
-    print r.VerifyByPubkey("mssage",r.SignByPrikey("message"))
             

@@ -9,15 +9,16 @@ import MatrixTable
 from DataBase import MediaTable
 
 class MyFrame(wx.Frame):
-    def __init__(self, permission, netconnect):
-        wx.Frame.__init__(self, None, -1, "内容提供部门", size = (1200,800))
-        self.__permission = permission
+    def __init__(self, msg, netconnect):
+        wx.Frame.__init__(self, None, -1, "内容提供部门", size=(1200, 800))
+        self.__permission = msg[1]
+        self.audituser = msg[0]
         
         self.__vbox_top = wx.BoxSizer(wx.VERTICAL)
         self.__hbox = wx.BoxSizer(wx.HORIZONTAL)
         self.__panel_top = wx.Panel(self)
         
-        self.createHeadStaticText(text="您好:" + "username" + ",欢迎使用CUCAuditSys!" + "\n")
+        self.createHeadStaticText(text="您好:" + msg[2] + ",欢迎使用CUCAuditSys!" + "\n")
         self.createHeadStaticText(align=wx.ALIGN_LEFT, text="\n" + " 中国传媒大学内容审核系统" + "\n", fontsize=15, fontcolor="blue", backcolor="bisque")
         self.__vbox_top.Add(wx.StaticLine(self.__panel_top), 0, wx.EXPAND | wx.ALL, 5)
         self.createMenuBar()
@@ -75,21 +76,20 @@ class MyFrame(wx.Frame):
         Publisher().subscribe(self.refreshStaticText, CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC)
         Publisher().subscribe(self.refreshFileList, CommonData.ViewPublisherc.MAINFRAME_REFRESHFILETABLE)
         
-    def refreshStaticText(self,recvmsg):
+    def refreshStaticText(self, recvmsg):
         "刷新信息显示区"
         _recvmsg = recvmsg
         if type(recvmsg) != list:
             _recvmsg = recvmsg.data
-        print _recvmsg
-        showmsg = "当前正在处理文件:"+ _recvmsg[0] + "\n"
+        showmsg = "当前正在处理文件:" + _recvmsg[0] + "\n"
         showmsg += "当前正在进行操作:" + _recvmsg[1]
         self.__infoStatic.SetLabel(showmsg)
     
-    def refreshFileList(self,recvmsg = ""):
+    def refreshFileList(self, recvmsg=""):
         "更新文件列表"
         _filelist = self.getFileList()
-        _m = MatrixTable.MatrixTable(_filelist,["文件名","所有者","状态"],[i for i in range(len(_filelist))])
-        self.__grid.ClearGrid()#清空表格
+        _m = MatrixTable.MatrixTable(_filelist, ["文件名", "审核者", "状态"], [i for i in range(len(_filelist))])
+        self.__grid.ClearGrid()  # 清空表格
         self.__grid.SetTable(_m)
         self.__grid.Hide()
         self.__grid.Show()
@@ -106,7 +106,6 @@ class MyFrame(wx.Frame):
         "添加新行"
         msg = recvmsg.data[0].decode("utf8")
         msg += "\n"
-        print recvmsg.data
         _isChangeColor = recvmsg.data[1]
         if _isChangeColor:
             if self.__showTextColor:
@@ -165,13 +164,13 @@ class MyFrame(wx.Frame):
         
         return stext
     
-    def OnScrollChanged(self,event):
+    def OnScrollChanged(self, event):
         try:
             _framenum = self.__framenum
         except:
             return
         
-        def getGroupLen(framenum,gt,glen):
+        def getGroupLen(framenum, gt, glen):
             "获取分组长度(参数X),_glen是每组的帧数目"
             _glen = glen - 1
             _x = 1
@@ -184,12 +183,12 @@ class MyFrame(wx.Frame):
         
         _spin = event.GetEventObject()
         if _spin == self.__AgroupSpin:
-            _value = getGroupLen(_framenum,_spin.GetValue(), _framenum / _spin.GetValue())
-            self.__AgapSpin.SetRange(1,_value)
+            _value = getGroupLen(_framenum, _spin.GetValue(), _framenum / _spin.GetValue())
+            self.__AgapSpin.SetRange(1, _value)
             self.__AgapSpin.SetValue(1)
         elif _spin == self.__BgroupSpin:
-            _value = getGroupLen(_framenum,_spin.GetValue(), _framenum / _spin.GetValue())
-            self.__BgapSpin.SetRange(1,_value)
+            _value = getGroupLen(_framenum, _spin.GetValue(), _framenum / _spin.GetValue())
+            self.__BgapSpin.SetRange(1, _value)
             self.__BgapSpin.SetValue(1)
     
     def createLeft2Spin(self, panel, vbox, spinlabel="", boxlabel=""):
@@ -203,11 +202,11 @@ class MyFrame(wx.Frame):
         self.createBox([_label, _sc], _panel, vbox, boxlabel, partition=0.5)
         return _sc
     
-    def evtBtnChoseClick(self,evt):
+    def evtBtnChoseClick(self, evt):
         _cmd = ChoseFileCmd.ChoseFileCmd(self)
         _cmd.Excute() 
     
-    def evtBtnSamplingClick(self,evt):
+    def evtBtnSamplingClick(self, evt):
         "触发采样"
         try:
             _dir = self.filename
@@ -215,10 +214,10 @@ class MyFrame(wx.Frame):
             return
         
         _filename = _dir[-_dir[::-1].index("/"):]
-        self.refreshStaticText([_filename,"采样"])
+        self.refreshStaticText([_filename, "采样"])
         
         from ProcessDialog import ProcessDialog
-        frame = ProcessDialog(self.filename,self)
+        frame = ProcessDialog(self.filename, self)
         frame.Run()
     
     def getSamplingParams(self):
@@ -229,17 +228,14 @@ class MyFrame(wx.Frame):
         
         import random
         _valueList = []
-        for _value in [self.__AgroupSpin,self.__AgapSpin]:
+        for _value in [self.__AgroupSpin, self.__AgapSpin, self.__BgroupSpin, self.__BgapSpin]:
             _valueList.append(_value.GetValue())
-        aparams = [framenum,_valueList[0],_valueList[1],random.random(),random.uniform(3.5699456,4.0)]
-        
-        for _value in [self.__BgroupSpin,self.__BgapSpin]:
-            _valueList.append(_value.GetValue())
-        bparams = [framenum,_valueList[0],_valueList[1],random.random(),random.uniform(3.5699456,4.0)]
-        return aparams ,bparams
+        aparams = [framenum, _valueList[0], _valueList[1], random.random(), random.uniform(3.5699456, 4.0)]
+        bparams = [framenum, _valueList[2], _valueList[3], random.random(), random.uniform(3.5699456, 4.0)]
+        return aparams , bparams
     
-    def evtBtnReqAuditClick(self,evt):
-        _cmd = DataHandleCmd.DataHandleCmd(self,*self.getSamplingParams())
+    def evtBtnReqAuditClick(self, evt):
+        _cmd = DataHandleCmd.DataHandleCmd(self, *self.getSamplingParams())
         _cmd.Excute()
     
     def createLeft3Button(self, panel, vbox):
@@ -254,22 +250,28 @@ class MyFrame(wx.Frame):
         
         self.createBox([_Button1, _Button2, _Button3], _panel, vbox, "", partition=0.5, align=wx.ALIGN_RIGHT)
         
-    def evtBtnDelClick(self,evt):
+    def evtBtnDelClick(self, evt):
         "删除按钮触发事件"
         if self.__gridCurPos == -1:
             return
         
-        _filename = self.__grid.GetCellValue(self.__gridCurPos,0)
+        _filename = self.__grid.GetCellValue(self.__gridCurPos, 0)
+        _owner = self.__grid.GetCellValue(self.__gridCurPos, 1)
         _cfg = ConfigData.ConfigData()
-        _path = _cfg.GetMediaPath() + "/" + "auditserver" + "/" + _filename
+        _path = _cfg.GetMediaPath() + "/" + _owner + "/" + _filename
         
         _db = MediaTable.MediaTable()
         _db.Connect()
         _db.deleteMedia(_filename)
         _db.CloseCon()
         
+        try:
+            os.remove(_path)
+        except:
+            pass
+        
         self.__gridCurPos = -1
-        self.refreshStaticText([_filename,"删除"])
+        self.refreshStaticText([_filename, "删除"])
         self.refreshFileList()
     
     def createLeft5Button(self, panel, vbox):
@@ -288,26 +290,24 @@ class MyFrame(wx.Frame):
         _mediaPath = _cfg.GetMediaPath()
         if not os.path.exists(_mediaPath):
             os.mkdir(_mediaPath)
-        _userDirList = os.listdir(_mediaPath)  
         
-        for owner in _userDirList:
-            _filenameList = os.listdir(_mediaPath + "/" + owner)
-            for filename in _filenameList:
-                _db = MediaTable.MediaTable()
-                _db.Connect()
-                _res = _db.searchMedia(filename)
-                _db.CloseCon()
-                status = "未审核"
-                if _res == []:
-                    break
-                if _res[0][5] == MagicNum.MediaTablec.AUDIT:
-                    status = "已审核"
-                _singleFile = [filename, owner, status]
-                _filelist.append(_singleFile)
+        _db = MediaTable.MediaTable()
+        _db.Connect()
+        _res = _db.Search("select * from MediaTable")
+        _db.CloseCon()
+        
+        for index in range(len(_res)):
+            status = "未审核"
+            if _res == []:
+                return []
+            if _res[index][6] == MagicNum.MediaTablec.AUDIT:
+                status = "已审核"
+            _singleFile = [_res[index][0], _res[index][5], status]
+            _filelist.append(_singleFile)
             
         return _filelist
     
-    def evtGridRowLabelLeftClick(self,evt):
+    def evtGridRowLabelLeftClick(self, evt):
         "左键单击行标签"
         _pos = evt.GetRow()
         
@@ -323,8 +323,8 @@ class MyFrame(wx.Frame):
             attr = wx.grid.GridCellAttr()
             self.__grid.SetRowAttr(self.__gridCurPos, attr)
         
-        #_filename = self.__grid.GetCellValue(self.__gridCurPos,0)
-        #self.refreshStaticText([_filename,"选择"])
+        # _filename = self.__grid.GetCellValue(self.__gridCurPos,0)
+        # self.refreshStaticText([_filename,"选择"])
         
         self.__gridCurPos = _pos
         self.__grid.Hide()
@@ -351,11 +351,10 @@ class MyFrame(wx.Frame):
         _cfg = ConfigData.ConfigData()
         _filename = _dir[-_dir[::-1].index("/"):_dir.index(".")]
         _mediadir = _cfg.GetYVectorFilePath() + _filename
-        print _mediadir
         
-        self.__framenum = sum([len(files) for root,dirs,files in os.walk(_mediadir)])
-        for _sc in [self.__AgroupSpin,self.__AgapSpin,self.__BgroupSpin,self.__BgapSpin]:
-            _sc.SetRange(1,self.__framenum)
+        self.__framenum = sum([len(files) for root, dirs, files in os.walk(_mediadir)])
+        for _sc in [self.__AgroupSpin, self.__AgapSpin, self.__BgroupSpin, self.__BgapSpin]:
+            _sc.SetRange(1, self.__framenum)
             _sc.SetValue(1) 
     
     def createMenuBar(self):

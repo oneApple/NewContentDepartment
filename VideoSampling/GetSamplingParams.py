@@ -41,4 +41,3 @@ class GetSamplingParams:
 
 if __name__ == "__main__":
     s = GetSamplingParams("../View/gaoqing_mpeg2")
-    print s.GetSamplingParams()

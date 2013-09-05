@@ -18,7 +18,6 @@ class NOUserTable(DataBaseInterface.DataBaseInterface,object):
         "验证一个用户的用户名和密码是否正确"
         _sql = "SELECT * FROM NOUserTable where name=? AND password=?"
         _res = self.Search(_sql, [name,psw])
-        print _res
         if _res == []:
             return False
         else:
@@ -51,5 +50,4 @@ if __name__=='__main__':
     #a.CreateTable()
     a.deleteUser("no")
     #a.AddNewUser(["a","a","localhost",8000,4001])
-    print a.Search("select * from NOUserTable")
     a.CloseCon()

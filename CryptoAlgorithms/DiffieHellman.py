@@ -34,5 +34,3 @@ if __name__ == '__main__':
     d1 = DiffieHellman(p)
     d2 = DiffieHellman(p)
 
-    print d2.getKey(d1.getPubkey())
-    print d1.getKey(d2.getPubkey())

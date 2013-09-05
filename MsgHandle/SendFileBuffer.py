@@ -12,7 +12,6 @@ class SendFileBuffer(MsgHandleInterface.MsgHandleInterface,object):
         "第一次发送则打开文件"
         if not session.filename or session.filename != session.control.filename:
             session.filename = session.control.filename
-        print session.filename
         session.file = open(session.filename,"rb")
         import os
         session.totalbytes = os.path.getsize(session.filename)
@@ -30,10 +29,8 @@ class SendFileBuffer(MsgHandleInterface.MsgHandleInterface,object):
             self.handleFileBegin(bufsize, session)
         _filebuffer = session.file.read(CommonData.MsgHandlec.FILEBLOCKSIZE)
         session.currentbytes += len(_filebuffer)
-        print session.currentbytes
         msgbody = _filebuffer
         if session.currentbytes == session.totalbytes:
-            print "end"
             msghead = self.packetMsg(MagicNum.MsgTypec.SENDFILEOVER,len(msgbody))
             session.file.close()
             session.currentbytes = 0
@@ -42,7 +39,6 @@ class SendFileBuffer(MsgHandleInterface.MsgHandleInterface,object):
             showmsg = "文件发送完毕:\n(1)文件名:" + _filename + "\n(2)文件大小(byte):" + str(session.totalbytes)
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         else:
-            print "..",len(msgbody)
             msghead = self.packetMsg(MagicNum.MsgTypec.SENDFILEBUFFER,len(msgbody))
         session.sockfd.send(msghead + msgbody)
         

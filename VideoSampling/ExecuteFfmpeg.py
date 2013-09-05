@@ -23,8 +23,7 @@ class ExecuteFfmpeg:
         self.__e.waitForProcess()
 
 if __name__ == "__main__":
-    e = ExecuteFfmpeg("/home/keym/project/auditnew/AuditNew/media/cp/小.mpg")
+    e = ExecuteFfmpeg("/home/keym/project/auditnew/AuditNew/media/auditserver/8.mpeg")
     
     if e.Run() == True:
         e.WaitForProcess()
-        print "\n\nhiman\n\n"

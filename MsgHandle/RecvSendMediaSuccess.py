@@ -21,3 +21,4 @@ class RecvSendMediaSuccess(MsgHandleInterface.MsgHandleInterface,object):
         _db.AlterMedia("status", MagicNum.MediaTablec.ACCEPT,session.filename.decode("utf-8"))
         _db.CloseCon()
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "服务端接收文件("+ _filename +")及参数成功",True)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHFILETABLE,"")

@@ -81,8 +81,6 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             
             
         self.deltempFile(session)
-        print _hashlist
-        print self.__bhash,self.__chash
         
         if not self.verifySignleSign(_hashlist[1], self.__csign, session):
             self.compareSamplingHash(_hashlist[1],self.__chash)
@@ -138,9 +136,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             showmsg = "结果：采样验证成功，该文件未被篡改"
         else:
             showmsg = "结果：采样验证失败，该文件被篡改,其中"
-        print difList,_groupborder
         for _dif in difList:
-            print _dif,_groupborder[_dif],_groupborder[_dif + 1]
             showmsg += "\n第" + str(_dif) + "组存在篡改，篡改帧区间为：" + str(_groupborder[_dif]) + "-" + str(_groupborder[_dif + 1]) +"帧"
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)
     
@@ -160,14 +156,25 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         recvbuffer = session.sockfd.recv(bufsize)
         _msglist = recvbuffer.split(CommonData.MsgHandlec.PADDING)
         if self.handleDhkeyAndCgroupParam(_msglist, session) == True:
-            self.getBgroupSignAndParam(session)
+            try:
+                self.getBgroupSignAndParam(session)
+            except:
+                wx.MessageBox("该文件不存在","错误",wx.ICON_ERROR|wx.YES_DEFAULT)
             if self.verifySign(session) == True:
                 showmsg = "收到采样结果:\n(1)B组参数：" + ",".join(self.__bparam.split(CommonData.MsgHandlec.PADDING)) + "\n(2)B组采样签名：" + _msglist[1]
-                showmsg += "\n(3)C组参数：" + ",".join(self.__cparam) + "\n(4)C组采样签名：" + self.__csign
+                showmsg += "\n(3)C组参数：" + ",".join(self.__cparam) + "\n(4)C组采样签名：" + self.__csign + "\n审核返回成功"
                 self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
                 msghead = self.packetMsg(MagicNum.MsgTypec.AUDITRETURNSUCCESS,0)
                 session.sockfd.send(msghead)
+                
+                
+                _db = MediaTable.MediaTable()
+                _db.Connect()
+                _db.AlterMedia("status", MagicNum.MediaTablec.AUDIT,session.filename )
+                _db.CloseCon()
+                self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHFILETABLE,"")
                 return
+            
         msghead = self.packetMsg(MagicNum.MsgTypec.IDENTITYVERIFYFAILED,0)
         session.sockfd.send(msghead)
         

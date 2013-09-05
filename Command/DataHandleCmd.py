@@ -23,14 +23,14 @@ class DataHandleCmd(CommandInterface,object):
         _bhash = CommonData.MsgHandlec.PADDING.join(sampling[3])
         return _aparam, _ahash, _bparam, _bhash 
     
-    def addNewMedia(self,filename,sampling):
+    def addNewMedia(self,filename,audituser,sampling):
         "增加媒体到数据库"
         _db = MediaTable.MediaTable()
         _db.Connect()
-        _value = (filename,) + sampling
+        _value = (filename,) + sampling + (audituser,)
         if not _db.AddNewMedia(_value):
             import wx
-            wx.MessageBox("该视频以存在","错误",wx.ICON_ERROR|wx.YES_DEFAULT)
+            wx.MessageBox("该视频已存在，相关数据无法存入数据库","错误",wx.ICON_ERROR|wx.YES_DEFAULT)
         _db.CloseCon()
     
     def handleSamplingParams(self,params):
@@ -44,11 +44,11 @@ class DataHandleCmd(CommandInterface,object):
         _aparam = self.handleSamplingParams(self.__aparams)
         _bparam = self.handleSamplingParams(self.__bparams)
         
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + "Ａ组采样过程:")
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,"Ａ组采样过程:",True)
         _agvs = GetVideoSampling.GetVideoSampling(_filename,*_aparam)
         _asampling = _agvs.GetSampling()
         
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, CommonData.MsgHandlec.SPARATE + "B组采样过程:")
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "B组采样过程:",True)
         _bgvs = GetVideoSampling.GetVideoSampling(_filename,*_bparam)
         _bsampling = _bgvs.GetSampling()
         
@@ -61,7 +61,6 @@ class DataHandleCmd(CommandInterface,object):
         _dir = self.__mediapath + filename[:filename.index(".")]
         for root, dirs, files in os.walk(_dir, topdown=False):
             for name in files:
-                print os.path.join(root, name)
                 os.remove(os.path.join(root, name))
             os.rmdir(root)  
     
@@ -69,6 +68,6 @@ class DataHandleCmd(CommandInterface,object):
         _sampling = self.handleParam(self.getMediaHashAndParam())
         _dir = self.view.filename
         _filename   = _dir[-_dir[::-1].index("/"):]
-        self.addNewMedia(_filename, _sampling)
+        self.addNewMedia(_filename,self.view.audituser, _sampling)
         self.deltempFile(_filename)
         self.view.netconnect.ReqAudit(_dir)

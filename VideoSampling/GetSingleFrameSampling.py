@@ -42,4 +42,3 @@ class GetSingleFrameSampling:
 
 if __name__ == "__main__":
     g = GetSingleFrameSampling()
-    print g.GetSingleSampling(1,"output",4,3)

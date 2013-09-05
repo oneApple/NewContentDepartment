@@ -35,7 +35,6 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
     
     def getFrameNum(self,filename):
         "获取目录下文件数即帧的数目"
-        print filename
         import os
         _cfg = ConfigData.ConfigData()
         _dirname = _cfg.GetYVectorFilePath() + filename[:filename.index(".")]
@@ -53,7 +52,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         showmsg = "正在采样 ..."
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)
         from VideoSampling import ExecuteFfmpeg,GetVideoSampling
-        _meidaPath = self.__mediapath + "/auditserver/" + _dir[-_dir[::-1].index("/"):]
+        _meidaPath = self.__mediapath + "/" + _res[0][6] + "/" + _dir[-_dir[::-1].index("/"):]
         _efm = ExecuteFfmpeg.ExecuteFfmpeg(_meidaPath)
         _efm.Run()
         _efm.WaitForProcess()

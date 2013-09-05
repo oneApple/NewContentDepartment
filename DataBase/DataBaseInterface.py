@@ -46,5 +46,4 @@ if __name__=='__main__':
     sql = "UPDATE APUserTable SET password=?,permission=? where name=?"
     a.ExcuteCmd(sql, ["new",2,"ke"])
     a.InsertValue("APUserTable",['ke',"d","POS",1])
-    print a.Search("SELECT * FROM APUserTable")
     a.CloseCon()

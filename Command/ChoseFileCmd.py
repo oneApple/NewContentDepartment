@@ -18,5 +18,5 @@ class ChoseFileCmd(CommandInterface,object):
             self.view.filename = dlg.GetPath()
             from GlobalData import CommonData
             showmsg = "选择文件：" + self.view.filename.encode("utf8") 
-            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,[showmsg,True])
+            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         dlg.Destroy()

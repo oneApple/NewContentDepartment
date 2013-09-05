@@ -16,7 +16,6 @@ class SamplingFrameArray:
         _arraylen = self.__fnum * (self.__X + CommonData.SamplingFrameArrayc.GROUPPARAMELEN)
         _c = Chaos.Chaos(_arraylen,self.__x0,self.__u)
         self.__binChaosArray = _c.getBinaryArray()
-        print "chaos",self.__binChaosArray
     
     def binaryToDecimal(self,binArray):
         "二进制转化为十进制"
@@ -31,7 +30,6 @@ class SamplingFrameArray:
         "获取一个序列，每个元素是一组，该组是一个map，是序列号与位置的对应"
         self.getChaosArray()
         _groupborder = [x * (self.__fnum / self.__gt) for x in range(1,self.__gt)] + [self.__fnum]
-        print self.__X,_groupborder,
         _curframe = 0
         _index = 0
         self.__groupChaosArray = []
@@ -59,7 +57,5 @@ if __name__ == "__main__":
     import GetSamplingParams
     s = GetSamplingParams.GetSamplingParams("../View/gaoqing_mpeg2")
     p = s.GetSamplingParams()
-    print p
     a = SamplingFrameArray(*p)
-    print a.SplitChaosArray()
     

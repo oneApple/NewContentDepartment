@@ -31,4 +31,3 @@ class HashBySha1:
     
 if __name__ == '__main__':
     h = HashBySha1()
-    print h.GetHash('fgsdfgsdfg'*pow(2,27),MagicNum.HashBySha1c.HEXADECIMAL)
