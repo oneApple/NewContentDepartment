@@ -15,8 +15,9 @@ class RecvObtainFile(MsgHandleInterface.MsgHandleInterface,object):
         session.filename = self.__mediapath + "/auditserver/" + recvbuffer
         
         session.threadtype = CommonData.ThreadType.ACCETPNO
-    
-        showmsg = "开始分发文件(" + recvbuffer + ")"
+        msglist = recvbuffer.split(CommonData.MsgHandlec.PADDING)
+        showmsg = "开始为" + msglist[1] +"分发文件(" + msglist[0] + ")"
+        session.peername = msglist[1]
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         
         import SendDhPAndPubkey

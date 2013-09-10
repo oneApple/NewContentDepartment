@@ -7,7 +7,7 @@ from MsgHandle import MsgHandleMap
 _metaclass_ = type
 class NetThread(threading.Thread):
     "网络通信线程"
-    def __init__(self,sock,control,threadtype):
+    def __init__(self,sock,control,threadtype,peername = "auditserver"):
         super(NetThread,self).__init__()
         self.sockfd = sock
         self.runflag = True
@@ -25,6 +25,7 @@ class NetThread(threading.Thread):
             if(len(recvbuffer) != struct.calcsize(CommonData.MsgHandlec.MSGHEADTYPE)):
                 break
             recvmsghead = struct.unpack(CommonData.MsgHandlec.MSGHEADTYPE,recvbuffer)
+            print recvmsghead
             _MsgHandleMap.getMsgHandle(recvmsghead[0]).HandleMsg(recvmsghead[1],self)
         #跳出循环，线程结束，关闭socke
         self.sockfd.close()
