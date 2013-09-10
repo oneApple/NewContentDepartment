@@ -26,7 +26,6 @@ class NetAcceptThread(threading.Thread):
         while self.__runflag:
             c,addr = self._listenfd.accept()
             s = 'Got connect from:' + str(addr) + "\n"
-            print s
             th = NetThread.NetThread(c.dup(),self,True)
             self.__threadlist.append(th)
             th.start()

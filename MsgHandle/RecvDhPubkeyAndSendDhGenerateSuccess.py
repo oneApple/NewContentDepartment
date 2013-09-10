@@ -15,7 +15,6 @@ class RecvDhPubkeyAndSendDhGenerateSuccess(MsgHandleInterface.MsgHandleInterface
         "如果验证成功则发送成功消息，否则发送验证失败并关闭该线程"
         _cfg = ConfigData.ConfigData()
         _rsa = Rsa.Rsa(_cfg.GetKeyPath())
-        print session.peername 
         if _rsa.VerifyByPubkey(msg, sign, session.peername) == False:
             msghead = self.packetMsg(MagicNum.MsgTypec.IDENTITYVERIFYFAILED, 0)
             session.sockfd.send( msghead )

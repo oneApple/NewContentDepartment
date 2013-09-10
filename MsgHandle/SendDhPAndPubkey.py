@@ -25,7 +25,6 @@ class SendDhPAndPubkey(MsgHandleInterface.MsgHandleInterface,object):
         msgbody = CommonData.MsgHandlec.PADDING.join(_dhkeymsg)
         msghead = self.packetMsg(MagicNum.MsgTypec.SENDDHPANDPUBKEY ,len(msgbody))
         session.sockfd.send(msghead + msgbody)
-        print _dhkeymsg
         if not session.peername:
             session.peername = "auditserver"
             

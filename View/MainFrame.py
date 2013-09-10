@@ -4,7 +4,7 @@ from wx.lib.pubsub  import Publisher
 
 from NetCommunication import NetAccept
 from GlobalData import CommonData, MagicNum, ConfigData
-from Command import ChoseFileCmd, SamplingCmd, DataHandleCmd
+from Command import ChoseFileCmd, DataHandleCmd
 import MatrixTable
 from DataBase import MediaTable
 
@@ -323,9 +323,6 @@ class MyFrame(wx.Frame):
             attr = wx.grid.GridCellAttr()
             self.__grid.SetRowAttr(self.__gridCurPos, attr)
         
-        # _filename = self.__grid.GetCellValue(self.__gridCurPos,0)
-        # self.refreshStaticText([_filename,"选择"])
-        
         self.__gridCurPos = _pos
         self.__grid.Hide()
         self.__grid.Show()
@@ -379,30 +376,6 @@ class MyFrame(wx.Frame):
                 menuitem = parentMenu.Append(-1, label)
                 self.Bind(wx.EVT_MENU, getattr(self, "menu" + child + "Cmd"), menuitem) 
                 parentMenu.AppendSeparator()           
-
-    def menuChoseFileCmd(self, event):
-        _cmd = ChoseFileCmd.ChoseFileCmd(self)
-        _cmd.Excute() 
-    
-    def menuSamplingCmd(self, event):
-        "调用程序采样"
-        try:
-            _cmd = SamplingCmd.SamplingCmd(self)
-            _cmd.Excute()
-        except:
-            wx.MessageBox("请先选择文件", "错误", wx.ICON_ERROR | wx.YES_DEFAULT)
-            
-    
-    def menuDataHandleCmd(self, event):
-        "将采样数据进行处理"
-        import SetSamplingParamsDialog
-        _dlg = SetSamplingParamsDialog.SetSamplingParamsDialog(self)
-        _dlg.Run()
-#        try:
-#            _cmd = DataHandleCmd.DataHandleCmd(self)
-#            _cmd.Excute()
-#        except:
-#            wx.MessageBox("请先选择文件","错误",wx.ICON_ERROR|wx.YES_DEFAULT)
     
     def menuUserAuditCmd(self, event):
         import AlterUserPermissionsDialog
@@ -412,11 +385,6 @@ class MyFrame(wx.Frame):
     def menuDeleteUserCmd(self, event):
         import DeleteUserDialog
         _dlg = DeleteUserDialog.DeleteUserDialog("删除用户")
-        _dlg.Run()
-    
-    def menuDeleteMediaCmd(self, event):
-        import DeleteMediaDialog
-        _dlg = DeleteMediaDialog.DeleteMediaDialog("删除文件")
         _dlg.Run()
     
     def menuClearDisplayCmd(self, event):
