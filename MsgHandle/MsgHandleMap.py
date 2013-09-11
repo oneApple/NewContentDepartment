@@ -15,7 +15,7 @@ class MsgHandleMap:
         "消息类型与处理类之间的关系"
         self.__MsgHandleMap = {MsgTypec.LOGINFAIL:RecvLoginFailed.RecvLoginFailed(),
                                MsgTypec.LOGINSUCCESS:RecvLoginSuccess.RecvLoginSuccess(),
-                               
+                               MsgTypec.REQCLOSEMSG:IdentifyVerifyFailed.IdentifyVerifyFailed(),
                                MsgTypec.REGISTERFAIL:RecvRegisterFailed.RecvRegisterFailed(),
                                MsgTypec.REGISTERSUCCESSMSG:RecvRegisterSuccess.RecvRegisterSuccess(),
                                

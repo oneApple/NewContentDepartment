@@ -20,6 +20,7 @@ class SendLoginResult(MsgHandleInterface.MsgHandleInterface,object):
     def HandleMsg(self,bufsize,session):
         "返回登录结果，并保存用户名"
         _recvmsg = session.sockfd.recv(bufsize)
+        _recvmsg = eval(_recvmsg)
         _loginmsg = _recvmsg.split(CommonData.MsgHandlec.PADDING)
         _res = self.verifyUser(_loginmsg[0], _loginmsg[1])
         if  _res != False:

@@ -159,7 +159,9 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             try:
                 self.getBgroupSignAndParam(session)
             except:
+                import wx
                 wx.MessageBox("该文件不存在","错误",wx.ICON_ERROR|wx.YES_DEFAULT)
+                return
             if self.verifySign(session) == True:
                 showmsg = "收到采样结果:\n(1)B组参数：" + ",".join(self.__bparam.split(CommonData.MsgHandlec.PADDING)) + "\n(2)B组采样签名：" + _msglist[1]
                 showmsg += "\n(3)C组参数：" + ",".join(self.__cparam) + "\n(4)C组采样签名：" + self.__csign + "\n审核返回成功"
@@ -170,7 +172,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
                 
                 _db = MediaTable.MediaTable()
                 _db.Connect()
-                _db.AlterMedia("status", MagicNum.MediaTablec.AUDIT,session.filename )
+                _db.AlterMedia("status", MagicNum.MediaTablec.AUDIT,session.filename.decode("utf8") )
                 _db.CloseCon()
                 self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHFILETABLE,"")
                 return

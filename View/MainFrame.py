@@ -30,15 +30,24 @@ class MyFrame(wx.Frame):
         self.__vbox_top.Add(wx.StaticLine(self.__panel_top), 0, wx.EXPAND | wx.ALL, 5)
         self.createHeadStaticText(text="CopyRight@CUC 2013")
         self.__panel_top.SetSizer(self.__vbox_top)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow) 
         self.registerPublisher()
         
         self.__gridCurPos = -1
         self.__showTextColor = True
         
         self.netconnect = netconnect
-        _netaccept = NetAccept.NetAccept(self)
-        _netaccept.startNetConnect()
-
+        self.__netaccept = NetAccept.NetAccept(self)
+        self.__netaccept.startNetConnect()
+    
+    def OnCloseWindow(self,evt):
+        print "close"
+        self.Destroy()
+        self.netconnect.StopNetConnect()
+        self.__netaccept.stopNetConnect()
+        import sys
+        sys.exit()
+    
     def createPanel(self, outpanel, color="mistyrose"):
         _panel = wx.Panel(outpanel, -1)
         _panel.SetBackgroundColour(color)

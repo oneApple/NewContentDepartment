@@ -28,8 +28,9 @@ class NetThread(threading.Thread):
             _MsgHandleMap.getMsgHandle(recvmsghead[0]).HandleMsg(recvmsghead[1],self)
         #跳出循环，线程结束，关闭socke
         self.sockfd.close()
-        if self.threadtype == CommonData.ThreadType.CONNECTAP:
-            self.control.StopNetConnect()
+        print "thread close"
+#        if self.threadtype == CommonData.ThreadType.CONNECTAP:
+#            self.control.StopNetConnect()
 
 
     def stop(self):
