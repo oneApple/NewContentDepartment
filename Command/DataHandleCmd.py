@@ -27,7 +27,7 @@ class DataHandleCmd(CommandInterface,object):
         "增加媒体到数据库"
         _db = MediaTable.MediaTable()
         _db.Connect()
-        _value = (filename,) + sampling + (audituser,)
+        _value = (filename.decode("utf8"),) + sampling + (audituser.decode("utf8"),)
         if not _db.AddNewMedia(_value):
             import wx
             wx.MessageBox("该视频已存在，相关数据无法存入数据库","错误",wx.ICON_ERROR|wx.YES_DEFAULT)

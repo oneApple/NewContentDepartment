@@ -18,7 +18,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _db.Connect()
         _dir = session.filename
         _filename =  _dir[-_dir[::-1].index("/"):]
-        _res = _db.searchMedia(_filename.decode("utf-8"))
+        _res = _db.searchMedia(_filename)
         return _res[0][1:3]
     
     def deltempFile(self,session):
@@ -47,7 +47,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _db.Connect()
         _dir = session.filename
         _filename =  _dir[-_dir[::-1].index("/"):]
-        _res = _db.searchMedia(_filename.decode("utf-8"))
+        _res = _db.searchMedia(_filename)
         
         showmsg = "正在采样 ..."
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)

@@ -27,21 +27,22 @@ class MediaTable(DataBaseInterface.DataBaseInterface,object):
     def AlterMedia(self,attri,value,name):
         "更改媒体表"
         _sql = "UPDATE MediaTable SET "+ attri +"=? where name=?"
-        self.ExcuteCmd(_sql,[value,name])
+        self.ExcuteCmd(_sql,[value,name.decode("utf8")])
     
     def searchMedia(self,name):
         _sql = "SELECT * FROM MediaTable where name=?"
-        return self.Search(_sql, [name])
+        return self.Search(_sql, [name.decode("utf8")])
     
     def deleteMedia(self,name):
         _sql = "DELETE FROM MediaTable WHERE name=?"
-        self.ExcuteCmd(_sql, [name,])  
+        self.ExcuteCmd(_sql, [name.decode("utf8"),])  
     
 if __name__=='__main__':
     a = MediaTable()
     a.Connect()
-    a.ExcuteCmd("drop table MediaTable")
-    a.CreateTable()
+    #a.ExcuteCmd("drop table MediaTable")
+    #a.CreateTable()
 #    a.AddNewMedia(("14frame.mpeg","sign","signparam","bgroup","bgroupparam"))
 #    a.deleteMedia("8.mpeg".decode("utf-8"))
+    
     a.CloseCon()

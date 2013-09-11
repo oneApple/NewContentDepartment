@@ -18,7 +18,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         "从数据库查询获取b组参数和hash值"
         _db = MediaTable.MediaTable()
         _db.Connect()
-        _res = _db.searchMedia(session.filename.decode("utf-8"))
+        _res = _db.searchMedia(session.filename)
         self.__bparam = _res[0][3]
         self.__bhash = _res[0][4]
         _db.CloseCon()
@@ -172,7 +172,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
                 
                 _db = MediaTable.MediaTable()
                 _db.Connect()
-                _db.AlterMedia("status", MagicNum.MediaTablec.AUDIT,session.filename.decode("utf8") )
+                _db.AlterMedia("status", MagicNum.MediaTablec.AUDIT,session.filename)
                 _db.CloseCon()
                 self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHFILETABLE,"")
                 return
