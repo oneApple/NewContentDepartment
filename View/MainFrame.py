@@ -41,10 +41,12 @@ class MyFrame(wx.Frame):
         self.__netaccept.startNetConnect()
     
     def OnCloseWindow(self,evt):
-        print "close"
         self.Destroy()
-        self.netconnect.StopNetConnect()
-        self.__netaccept.stopNetConnect()
+        try:
+            self.netconnect.StopNetConnect()
+            self.__netaccept.stopNetConnect()
+        except:
+            pass
         import sys
         sys.exit()
     

@@ -5,8 +5,8 @@ path:./ico/logo.jpg
 [keys]
 path:./keys
 [auditserver]
-ip:localhost
-port:18080
+ip:222.31.101,176
+port:8080
 [localserver]
 ip:localhost
 port:18000

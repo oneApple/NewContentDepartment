@@ -4,7 +4,7 @@ class MsgHandlec:
     SAMPLINGTYPE = "fffff"
     PADDING = "###"
     SPARATE = "~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~\n"
-    FILEBLOCKSIZE = 10240
+    FILEBLOCKSIZE = 1024
     
 class ThreadType:
     CONNECTAP = 10001
