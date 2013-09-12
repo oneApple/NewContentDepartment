@@ -43,6 +43,6 @@ if __name__=='__main__':
     #a.ExcuteCmd("drop table MediaTable")
     #a.CreateTable()
 #    a.AddNewMedia(("14frame.mpeg","sign","signparam","bgroup","bgroupparam"))
-#    a.deleteMedia("8.mpeg".decode("utf-8"))
-    
+    #a.deleteMedia("视频源1.mpg".decode("utf-8"))
+    print a.Search("select * from MediaTable")
     a.CloseCon()

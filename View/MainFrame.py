@@ -267,7 +267,7 @@ class MyFrame(wx.Frame):
         _filename = self.__grid.GetCellValue(self.__gridCurPos, 0)
         _owner = self.__grid.GetCellValue(self.__gridCurPos, 1)
         _cfg = ConfigData.ConfigData()
-        _path = _cfg.GetMediaPath() + "/" + _owner + "/" + _filename
+        _path = _cfg.GetMediaPath() + "/auditserver/" + _filename
         
         _db = MediaTable.MediaTable()
         _db.Connect()

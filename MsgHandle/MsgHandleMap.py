@@ -5,8 +5,7 @@ from MsgHandle import RecvLoginFailed, SendDhPAndPubkey, RecvRegisterFailed, Rec
                       IdentifyVerifyFailed, RecvDhPubkeyAndSendDhGenerateSuccess, RecvLoginSuccess, SendFileBuffer, \
                       SendAgroupSignAndParam, RecvSendMediaSuccess, \
                       RecvFilename, RecvFileBuffer, RecvAllFile, RecvCgroupSignAndParam, \
-                      SendLoginResult, RecvAndSendDh, SendRegisterResult, \
-                      SendFileList, RecvObtainFile
+                      SendLoginResult, RecvAndSendDh, SendRegisterResult, RecvObtainFile
                       
 
 
@@ -35,7 +34,6 @@ class MsgHandleMap:
                                MsgTypec.REQLOGINMSG:SendLoginResult.SendLoginResult(),
                                MsgTypec.SENDDHPANDPUBKEY:RecvAndSendDh.RecvAndSendDh(),
                                MsgTypec.REQREGISTERMSG:SendRegisterResult.SendRegisterResult(),
-                               MsgTypec.REQFILELIST:SendFileList.SendFileList(),
                                
                                MsgTypec.REQOBTAINFILE:RecvObtainFile.RecvObtainFile(),
                                

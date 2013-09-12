@@ -17,7 +17,7 @@ class NOUserTable(DataBaseInterface.DataBaseInterface,object):
     def VerifyNamePsw(self,name,psw):
         "验证一个用户的用户名和密码是否正确"
         _sql = "SELECT * FROM NOUserTable where name=? AND password=?"
-        _res = self.Search(_sql, [name,psw])
+        _res = self.Search(_sql, [name.decode("utf8"),psw])
         if _res == []:
             return False
         else:
@@ -34,15 +34,15 @@ class NOUserTable(DataBaseInterface.DataBaseInterface,object):
     def AlterUser(self,attri,value,name):
         "更改用户信息"
         _sql = "UPDATE NOUserTable SET "+ attri +"=? where name=?"
-        self.ExcuteCmd(_sql,[value,name])
+        self.ExcuteCmd(_sql,[value,name.decode("utf8")])
     
     def searchUser(self,name):
         _sql = "SELECT * FROM NOUserTable where name=?"
-        return self.Search(_sql, [name])
+        return self.Search(_sql, [name.decode("utf8")])
     
     def deleteUser(self,name):
         _sql = "DELETE FROM NOUserTable WHERE name=?"
-        self.ExcuteCmd(_sql, [name,])  
+        self.ExcuteCmd(_sql, [name.decode("utf8"),])  
     
 if __name__=='__main__':
     a = NOUserTable()
