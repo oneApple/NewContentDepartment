@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 _metaclass_ = type
 
+from NetCommunication import NetSocketFun
 from MsgHandle import MsgHandleInterface
 from DataBase import NOUserTable
 from GlobalData import MagicNum
@@ -21,5 +22,5 @@ class RecvDhGenerateSuccess(MsgHandleInterface.MsgHandleInterface,object):
         _permission = self.getUserPermission(session.peername)
         msgbody = str(_permission)
         msghead = self.packetMsg(MagicNum.MsgTypec.LOGINSUCCESS,len(msgbody))
-        session.sockfd.send(msghead + msgbody)
+        NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody)
         

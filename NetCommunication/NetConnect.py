@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 import socket, struct
-
+from NetCommunication import NetSocketFun
 import NetThread
 from CryptoAlgorithms import RsaKeyExchange
 from GlobalData import CommonData, ConfigData, MagicNum
@@ -19,7 +19,7 @@ class NetConnect:
         "请求登录"
         _msgbody = MagicNum.UserTypec.CPUSER + CommonData.MsgHandlec.PADDING + name + CommonData.MsgHandlec.PADDING + psw
         _msghead = struct.pack(CommonData.MsgHandlec.MSGHEADTYPE,MagicNum.MsgTypec.REQLOGINMSG,len(_msgbody))
-        self.__Sockfd.send(_msghead + _msgbody)
+        NetSocketFun.NetSocketSend(self.__Sockfd,_msghead + _msgbody)
     
     def ReqRegister(self,name,psw,ip,port):
         "请求注册"
@@ -32,14 +32,14 @@ class NetConnect:
                    port + CommonData.MsgHandlec.PADDING + \
                    _pkeystr
         _msghead = struct.pack(CommonData.MsgHandlec.MSGHEADTYPE,MagicNum.MsgTypec.REQREGISTERMSG,len(_msgbody))
-        self.__Sockfd.send(_msghead + _msgbody.decode('gbk').encode("utf-8"))
+        NetSocketFun.NetSocketSend(self.__Sockfd,_msghead + _msgbody.decode('gbk').encode("utf-8"))
         
     def ReqAudit(self,filename):
         "请求审核" 
         self.filename = filename
         _msgbody = filename[-filename[::-1].index("/"):].encode("utf-8")
         _msghead = struct.pack(CommonData.MsgHandlec.MSGHEADTYPE,MagicNum.MsgTypec.REQAUDITMSG, len(_msgbody))
-        self.__Sockfd.send(_msghead + _msgbody)
+        NetSocketFun.NetSocketSend(self.__Sockfd,_msghead + _msgbody)
         
         import wx
         from wx.lib.pubsub  import Publisher
@@ -60,7 +60,7 @@ class NetConnect:
     def StopNetConnect(self):
         "发送关闭消息并关闭网络线程"
         _msghead = struct.pack(CommonData.MsgHandlec.MSGHEADTYPE,MagicNum.MsgTypec.REQCLOSEMSG, 0)
-        self.__Sockfd.send(_msghead)
+        NetSocketFun.NetSocketSend(self.__Sockfd,_msghead)
         self.__netThread.stop()
         #放在主线程主执行
         

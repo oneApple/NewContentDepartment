@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 _metaclass_ = type
 from wx.lib.pubsub  import Publisher
+from NetCommunication import NetSocketFun
 import wx
 
 from MsgHandle import MsgHandleInterface
@@ -11,7 +12,7 @@ class RecvRegisterSuccess(MsgHandleInterface.MsgHandleInterface,object):
         super(RecvRegisterSuccess,self).__init__()
     
     def HandleMsg(self,bufsize,session):
-        recvbuffer = session.sockfd.recv(bufsize)
+        recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
         from CryptoAlgorithms import RsaKeyExchange
         _rke = RsaKeyExchange.RsaKeyExchange()
         _rke.WritePubkeyStr("auditserver",recvbuffer)

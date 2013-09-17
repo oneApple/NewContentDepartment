@@ -1,6 +1,7 @@
 #coding=utf-8
 _metaclass_ = type
 
+from NetCommunication import NetSocketFun
 from MsgHandle import MsgHandleInterface
 from GlobalData import CommonData, MagicNum, ConfigData
 
@@ -26,7 +27,7 @@ class SendFileBuffer(MsgHandleInterface.MsgHandleInterface,object):
         if not session.currentbytes and session.threadtype != CommonData.ThreadType.CONNECTAP:
             _cfg = ConfigData.ConfigData()
             _dir = _cfg.GetMediaPath() + "/auditserver/" 
-            session.control.filename = _dir + session.sockfd.recv(bufsize)
+            session.control.filename = _dir + NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
         if not session.currentbytes:
             self.handleFileBegin(bufsize, session)
         _filebuffer = session.file.read(CommonData.MsgHandlec.FILEBLOCKSIZE)
@@ -42,5 +43,5 @@ class SendFileBuffer(MsgHandleInterface.MsgHandleInterface,object):
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         else:
             msghead = self.packetMsg(MagicNum.MsgTypec.SENDFILEBUFFER,len(msgbody))
-        session.sockfd.send(msghead + msgbody)
+        NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody)
         

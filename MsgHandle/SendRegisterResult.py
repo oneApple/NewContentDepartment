@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 _metaclass_ = type
 
+from NetCommunication import NetSocketFun
 from MsgHandle import MsgHandleInterface
 from GlobalData import MagicNum, CommonData
 from DataBase import NOUserTable
@@ -26,13 +27,13 @@ class SendRegisterResult(MsgHandleInterface.MsgHandleInterface,object):
     
     def HandleMsg(self,bufsize,session):
         "返回注册信息并保存用户名"
-        _recvmsg = session.sockfd.recv(bufsize)
+        _recvmsg = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
         _loginmsg = _recvmsg.split(CommonData.MsgHandlec.PADDING) + [MagicNum.CPUserTablec.UNACCEPT]
         _loginmsg
         if self.verifyUser(_loginmsg[0]) == False:
             restype = MagicNum.MsgTypec.REGISTERFAIL
             msghead = self.packetMsg(restype,0)
-            session.sockfd.send(msghead)
+            NetSocketFun.NetSocketSend(session.sockfd,msghead)
         else:
             restype = MagicNum.MsgTypec.REGISTERSUCCESSMSG
             self.addNewCPUser(_loginmsg[:-2] + _loginmsg[-1:])
@@ -42,4 +43,4 @@ class SendRegisterResult(MsgHandleInterface.MsgHandleInterface,object):
             _rke.WritePubkeyStr(session.name, _loginmsg[-2])
             msgbody = _rke.GetPubkeyStr("own")
             msghead = self.packetMsg(restype,len(msgbody))
-            session.sockfd.send(msghead + msgbody.decode('gbk').encode("utf-8") )
+            NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody.decode('gbk').encode("utf-8") )

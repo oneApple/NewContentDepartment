@@ -1,6 +1,7 @@
 #coding=utf-8
 _metaclass_ = type
 from MsgHandle import MsgHandleInterface 
+from NetCommunication import NetSocketFun
 from GlobalData import ConfigData, CommonData
 
 class RecvObtainFile(MsgHandleInterface.MsgHandleInterface,object):
@@ -11,7 +12,7 @@ class RecvObtainFile(MsgHandleInterface.MsgHandleInterface,object):
     
     def HandleMsg(self,bufsize,session):
         "接收文件名,保存文件名"
-        recvbuffer = session.sockfd.recv(bufsize)
+        recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
         
         session.threadtype = CommonData.ThreadType.ACCETPNO
         msglist = recvbuffer.split(CommonData.MsgHandlec.PADDING)

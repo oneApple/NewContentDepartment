@@ -1,6 +1,7 @@
 #coding=utf-8
 _metaclass_ = type
 from MsgHandle import MsgHandleInterface 
+from NetCommunication import NetSocketFun
 from GlobalData import ConfigData,CommonData
 
 class RecvFilename(MsgHandleInterface.MsgHandleInterface,object):
@@ -20,7 +21,7 @@ class RecvFilename(MsgHandleInterface.MsgHandleInterface,object):
     
     def HandleMsg(self,bufsize,session):
         "接收文件名，并打开文件准备写"
-        recvbuffer = session.sockfd.recv(bufsize)
+        recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
         self.createMediaDir(session)
         session.filename = recvbuffer
         

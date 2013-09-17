@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 _metaclass_ = type
 
+from NetCommunication import NetSocketFun
 from MsgHandle import MsgHandleInterface
 from GlobalData import CommonData, MagicNum, ConfigData
 from DataBase import MediaTable
@@ -102,7 +103,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
     def HandleMsg(self,bufsize,session):
         msgbody = self.packMsgBody(session)
         msghead = self.packetMsg(MagicNum.MsgTypec.SENDAGROUP,len(msgbody))
-        session.sockfd.send(msghead + msgbody)
+        NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody)
         
 if __name__ == "__main__":
     pass    

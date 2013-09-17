@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 _metaclass_ = type
 
+from NetCommunication import NetSocketFun
 from MsgHandle import MsgHandleInterface
 from GlobalData import MagicNum, CommonData
 from DataBase import NOUserTable
@@ -19,18 +20,18 @@ class SendLoginResult(MsgHandleInterface.MsgHandleInterface,object):
     
     def HandleMsg(self,bufsize,session):
         "返回登录结果，并保存用户名"
-        _recvmsg = session.sockfd.recv(bufsize)
+        _recvmsg = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
         _recvmsg = eval(_recvmsg)
         _loginmsg = _recvmsg.split(CommonData.MsgHandlec.PADDING)
         _res = self.verifyUser(_loginmsg[0], _loginmsg[1])
         if  _res != False:
             msgbody = str(_res)
             msghead = self.packetMsg(MagicNum.MsgTypec.LOGINSUCCESS,len(msgbody))
-            session.sockfd.send(msghead + msgbody)
+            NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody)
             session.peername = _loginmsg[0]
             showmsg = session.peername + "登录成功"
         else:
             msghead = self.packetMsg(MagicNum.MsgTypec.LOGINFAIL,0)
-            session.sockfd.send(msghead)
+            NetSocketFun.NetSocketSend(session.sockfd,msghead)
             showmsg = session.peername + "登录失败"
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)

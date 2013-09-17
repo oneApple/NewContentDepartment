@@ -3,6 +3,7 @@ import threading ,struct
 
 from GlobalData import CommonData
 from MsgHandle import MsgHandleMap
+from NetCommunication import NetSocketFun
 
 _metaclass_ = type
 class NetThread(threading.Thread):
@@ -21,10 +22,11 @@ class NetThread(threading.Thread):
         "接受消息头之后，得到消息类型，然后选择具体的处理类来处理该消息"
         _MsgHandleMap = MsgHandleMap.MsgHandleMap()
         while self.runflag:
-            recvbuffer = self.sockfd.recv(struct.calcsize(CommonData.MsgHandlec.MSGHEADTYPE))
+            recvbuffer = NetSocketFun.NetSocketRecv(self.sockfd,struct.calcsize(CommonData.MsgHandlec.MSGHEADTYPE))
             if(len(recvbuffer) != struct.calcsize(CommonData.MsgHandlec.MSGHEADTYPE)):
                 break
             recvmsghead = struct.unpack(CommonData.MsgHandlec.MSGHEADTYPE,recvbuffer)
+            print recvmsghead
             _MsgHandleMap.getMsgHandle(recvmsghead[0]).HandleMsg(recvmsghead[1],self)
         #跳出循环，线程结束，关闭socke
         self.sockfd.close()

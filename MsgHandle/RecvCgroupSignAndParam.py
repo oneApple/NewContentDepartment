@@ -1,6 +1,7 @@
 #coding=utf-8
 _metaclass_ = type
 import string
+from NetCommunication import NetSocketFun
 
 from MsgHandle import MsgHandleInterface
 from GlobalData import CommonData, MagicNum, ConfigData
@@ -153,7 +154,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             os.rmdir(root)  
     
     def HandleMsg(self,bufsize,session):
-        recvbuffer = session.sockfd.recv(bufsize)
+        recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
         _msglist = recvbuffer.split(CommonData.MsgHandlec.PADDING)
         if self.handleDhkeyAndCgroupParam(_msglist, session) == True:
             try:
@@ -167,7 +168,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
                 showmsg += "\n(3)C组参数：" + ",".join(self.__cparam) + "\n(4)C组采样签名：" + self.__csign + "\n审核返回成功"
                 self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
                 msghead = self.packetMsg(MagicNum.MsgTypec.AUDITRETURNSUCCESS,0)
-                session.sockfd.send(msghead)
+                NetSocketFun.NetSocketSend(session.sockfd,msghead)
                 
                 
                 _db = MediaTable.MediaTable()
@@ -178,7 +179,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
                 return
             
         msghead = self.packetMsg(MagicNum.MsgTypec.IDENTITYVERIFYFAILED,0)
-        session.sockfd.send(msghead)
+        NetSocketFun.NetSocketSend(session.sockfd,msghead)
         
 if __name__ == "__main__":
     pass

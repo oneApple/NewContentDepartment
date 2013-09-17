@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 _metaclass_ = type
 import string
+from NetCommunication import NetSocketFun
 
 from MsgHandle import MsgHandleInterface
 from CryptoAlgorithms import Rsa
@@ -17,7 +18,7 @@ class RecvDhPubkeyAndSendDhGenerateSuccess(MsgHandleInterface.MsgHandleInterface
         _rsa = Rsa.Rsa(_cfg.GetKeyPath())
         if _rsa.VerifyByPubkey(msg, sign, session.peername) == False:
             msghead = self.packetMsg(MagicNum.MsgTypec.IDENTITYVERIFYFAILED, 0)
-            session.sockfd.send( msghead )
+            NetSocketFun.NetSocketSend(session.sockfd, msghead )
             session.stop()
             showmsg = "签名验证失败"
         else:
@@ -29,13 +30,13 @@ class RecvDhPubkeyAndSendDhGenerateSuccess(MsgHandleInterface.MsgHandleInterface
                 msghead = self.packetMsg(MagicNum.MsgTypec.AUDITDHGENERATE, 0)
             else:
                 msghead = self.packetMsg(MagicNum.MsgTypec.AUDITRETURNDHGENERATE, 0)
-            session.sockfd.send( msghead )
+            NetSocketFun.NetSocketSend(session.sockfd, msghead )
             showmsg = "生成会话密钥：" + session.sessionkey
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
     
     def HandleMsg(self,bufsize,session):
         "接受对方传来的dh参数及公钥并生成自己的dh公钥"
-        recvbuffer = session.sockfd.recv(bufsize)
+        recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
         dhmsg = recvbuffer.split(CommonData.MsgHandlec.PADDING)
         #参数p：公钥：签名
         self.verifyMsgSign(dhmsg[0], dhmsg[1], session)

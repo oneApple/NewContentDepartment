@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 _metaclass_ = type
 
+from NetCommunication import NetSocketFun
 from MsgHandle import MsgHandleInterface
 from GlobalData import CommonData, MagicNum, ConfigData
 from CryptoAlgorithms import DiffieHellman, Rsa
@@ -24,7 +25,7 @@ class SendDhPAndPubkey(MsgHandleInterface.MsgHandleInterface,object):
         _dhkeymsg = self.getDhpAndga(session)
         msgbody = CommonData.MsgHandlec.PADDING.join(_dhkeymsg)
         msghead = self.packetMsg(MagicNum.MsgTypec.SENDDHPANDPUBKEY ,len(msgbody))
-        session.sockfd.send(msghead + msgbody)
+        NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody)
         if not session.peername:
             session.peername = "auditserver"
             
