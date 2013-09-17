@@ -41,7 +41,6 @@ class NetAcceptThread(threading.Thread):
                     c.close()
                 elif event & select.EPOLLHUP:
                     _epoll.unregister(fileno)
-                    print "canont listend"
                     self.__runflag = False
                     break
         self._listenfd.close();

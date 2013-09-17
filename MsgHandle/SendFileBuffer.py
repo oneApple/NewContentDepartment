@@ -12,9 +12,7 @@ class SendFileBuffer(MsgHandleInterface.MsgHandleInterface,object):
     def handleFileBegin(self,bufsize,session):
         "第一次发送则打开文件"
         if not session.filename or session.filename != session.control.filename:
-            print "session.control.filename",session.control.filename
             session.filename = session.control.filename.decode("utf8")
-        print session.filename.encode("gbk")
         session.file = open(session.filename,"rb")
         import os
         session.totalbytes = os.path.getsize(session.filename)
@@ -43,6 +41,5 @@ class SendFileBuffer(MsgHandleInterface.MsgHandleInterface,object):
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         else:
             msghead = self.packetMsg(MagicNum.MsgTypec.SENDFILEBUFFER,len(msgbody))
-        print len(msghead + msgbody)
-        print NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody)
+        NetSocketFun.NetSocketSend(session.sockfd, msghead + msgbody)
         

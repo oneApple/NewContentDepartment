@@ -41,7 +41,6 @@ class LoginDialog(ValidaDialog.ValidaDialog,object):
     
     def secondButtonFun(self):
         _inputlist = self.getInputText()
-        print _inputlist
         self.__netconnect.ReqConnect(_inputlist[0], _inputlist[1])
             
     def registerButtonFun(self,event):
