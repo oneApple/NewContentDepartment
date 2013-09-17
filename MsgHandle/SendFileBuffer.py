@@ -43,5 +43,6 @@ class SendFileBuffer(MsgHandleInterface.MsgHandleInterface,object):
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         else:
             msghead = self.packetMsg(MagicNum.MsgTypec.SENDFILEBUFFER,len(msgbody))
-        NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody)
+        print len(msghead + msgbody)
+        print NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody)
         

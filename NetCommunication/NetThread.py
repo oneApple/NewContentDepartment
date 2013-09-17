@@ -23,10 +23,9 @@ class NetThread(threading.Thread):
         _MsgHandleMap = MsgHandleMap.MsgHandleMap()
         while self.runflag:
             recvbuffer = NetSocketFun.NetSocketRecv(self.sockfd,struct.calcsize(CommonData.MsgHandlec.MSGHEADTYPE))
-            if(len(recvbuffer) != struct.calcsize(CommonData.MsgHandlec.MSGHEADTYPE)):
+            if len(recvbuffer) == 0 or (len(recvbuffer) != struct.calcsize(CommonData.MsgHandlec.MSGHEADTYPE)):
                 break
             recvmsghead = struct.unpack(CommonData.MsgHandlec.MSGHEADTYPE,recvbuffer)
-            print recvmsghead
             _MsgHandleMap.getMsgHandle(recvmsghead[0]).HandleMsg(recvmsghead[1],self)
         #跳出循环，线程结束，关闭socke
         self.sockfd.close()
