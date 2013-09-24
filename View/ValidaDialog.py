@@ -108,6 +108,7 @@ class ValidaDialog(wx.Dialog):
         _fgs = wx.FlexGridSizer(_textnum, 2, 5, 10)
         for _label in _textlist:
             self.createSingleText(_fgs,_label)
+        self.__textList[0].SetFocus()
         _fgs.AddGrowableCol(1)
         self.sizer.Add(_fgs, 0, wx.EXPAND|wx.ALL, 5)
     

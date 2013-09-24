@@ -15,12 +15,9 @@ class RecvObtainFile(MsgHandleInterface.MsgHandleInterface,object):
         "接收文件名,保存文件名"
         recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
         session.threadtype = CommonData.ThreadType.ACCETPNO
-        print recvbuffer
         msglist = NetSocketFun.NetUnPackMsgBody(recvbuffer.encode("utf-8"))
         session.filename = self.__mediapath + "/auditserver/" + msglist[0]
         showmsg = "开始为 " + msglist[1]  +" 分发文件(" + msglist[0] + ")"
-        print msglist
-        print showmsg
         session.peername = msglist[1]
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg.encode("utf-8"),True)
         

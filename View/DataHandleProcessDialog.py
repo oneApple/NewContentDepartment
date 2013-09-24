@@ -14,18 +14,16 @@ import wx
 import time
 import thread 
  
-def Sampling(path,frame):  
-    from VideoSampling import ExecuteFfmpeg 
-    _efm = ExecuteFfmpeg.ExecuteFfmpeg(path)
-    _efm.Run()
-    _efm.WaitForProcess()
-    frame.frame.getFrameNum()
+def DataHandle(mainframe,frame):  
+    from Command import DataHandleCmd
+    _cmd = DataHandleCmd.DataHandleCmd(mainframe, *mainframe.getSamplingParams())
+    _cmd.Excute() 
     frame.Destroy()
     thread.exit_thread()  
      
-class ProcessDialog(wx.Dialog):
-    def __init__(self,path,frame):
-        wx.Dialog.__init__(self, None, -1, '正在采样中...',size = (400,150))
+class DataHandleProcessDialog(wx.Dialog):
+    def __init__(self,frame):
+        wx.Dialog.__init__(self, None, -1, '数据处理中...',size = (400,150))
         panel = wx.Panel(self, -1)
         panel.SetBackgroundColour("white")
         self.count = 0
@@ -34,7 +32,6 @@ class ProcessDialog(wx.Dialog):
         self.gauge.SetShadowWidth(3)
         self.Bind(wx.EVT_IDLE, self.OnIdle)
         
-        self.path = path
         self.frame = frame
         
              
@@ -49,5 +46,5 @@ class ProcessDialog(wx.Dialog):
         self.Center()
         self.Show()
         
-        thread.start_new_thread(Sampling, (self.path,self))
+        thread.start_new_thread(DataHandle, (self.frame,self))
      

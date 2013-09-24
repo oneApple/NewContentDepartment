@@ -230,8 +230,8 @@ class MyFrame(wx.Frame):
         _filename = _dir[-_dir[::-1].index("/"):]
         self.refreshStaticText([_filename, "采样"])
         
-        from ProcessDialog import ProcessDialog
-        frame = ProcessDialog(self.filename, self)
+        from SamplingProcessDialog import SamplingProcessDialog
+        frame = SamplingProcessDialog(self.filename, self)
         frame.Run()
     
     def getSamplingParams(self):
@@ -249,8 +249,9 @@ class MyFrame(wx.Frame):
         return aparams , bparams
     
     def evtBtnReqAuditClick(self, evt):
-        _cmd = DataHandleCmd.DataHandleCmd(self, *self.getSamplingParams())
-        _cmd.Excute()
+        import DataHandleProcessDialog
+        dlg = DataHandleProcessDialog.DataHandleProcessDialog(self)
+        dlg.Run()
     
     def createLeft3Button(self, panel, vbox):
         _panel = self.createPanel(panel)

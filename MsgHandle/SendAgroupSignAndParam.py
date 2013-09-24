@@ -99,6 +99,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         showmsg += "\nCP用AP的公钥加密采样参数A"
         showmsg += "\nCP用其私钥加密比特串承诺值"
         showmsg += "\nCP发送加密的A组参数和加密的比特串承诺值，以及公钥加密TID发送给AP"
+        showmsg += "\n等待文件验证..."
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         return _msgbody
     
