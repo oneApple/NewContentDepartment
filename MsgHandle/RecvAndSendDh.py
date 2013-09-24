@@ -30,14 +30,15 @@ class RecvAndSendDh(MsgHandleInterface.MsgHandleInterface,object):
             _hbs = HashBySha1.HashBySha1()
             session.sessionkey = _hbs.GetHash(str(_dhkey.getKey(string.atol(msg[1]))),MagicNum.HashBySha1c.HEXADECIMAL)
             _dhpubkey = str(_dhkey.getPubkey())
-            msgbody = _dhpubkey + CommonData.MsgHandlec.PADDING + _rsa.SignByPrikey(_dhpubkey)
+            msglist = [_dhpubkey,_rsa.SignByPrikey(_dhpubkey)]
+            msgbody = NetSocketFun.NetPackMsgBody(msglist)
             msghead = self.packetMsg(MagicNum.MsgTypec.SENDDHPUBKEY, len(msgbody))
             NetSocketFun.NetSocketSend(session.sockfd, msghead + msgbody ) 
     
     def HandleMsg(self,bufsize,session):
         "接受对方传来的dh参数及公钥并生成自己的dh公钥"
-        recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
-        dhmsg = recvbuffer.split(CommonData.MsgHandlec.PADDING)
+        recvmsg = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
+        dhmsg = NetSocketFun.NetUnPackMsgBody(recvmsg)
         #参数p：公钥：签名
         self.verifyMsgSign(dhmsg[:2], dhmsg[2:], session)
         

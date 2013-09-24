@@ -12,7 +12,8 @@ class RecvRegisterSuccess(MsgHandleInterface.MsgHandleInterface,object):
         super(RecvRegisterSuccess,self).__init__()
     
     def HandleMsg(self,bufsize,session):
-        recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
+        recvmsg = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
+        recvbuffer = NetSocketFun.NetUnPackMsgBody(recvmsg)[0]
         from CryptoAlgorithms import RsaKeyExchange
         _rke = RsaKeyExchange.RsaKeyExchange()
         _rke.WritePubkeyStr("auditserver",recvbuffer)

@@ -25,12 +25,13 @@ class SendFileBuffer(MsgHandleInterface.MsgHandleInterface,object):
         if not session.currentbytes and session.threadtype != CommonData.ThreadType.CONNECTAP:
             _cfg = ConfigData.ConfigData()
             _dir = _cfg.GetMediaPath() + "/auditserver/" 
-            session.control.filename = _dir + NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
+            recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
+            session.control.filename = _dir + NetSocketFun.NetUnPackMsgBody(recvbuffer)[0]
         if not session.currentbytes:
             self.handleFileBegin(bufsize, session)
         _filebuffer = session.file.read(CommonData.MsgHandlec.FILEBLOCKSIZE)
         session.currentbytes += len(_filebuffer)
-        msgbody = _filebuffer
+        msgbody = NetSocketFun.NetPackMsgBody([_filebuffer])
         if session.currentbytes == session.totalbytes:
             msghead = self.packetMsg(MagicNum.MsgTypec.SENDFILEOVER,len(msgbody))
             session.file.close()

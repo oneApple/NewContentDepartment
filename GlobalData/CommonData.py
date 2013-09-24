@@ -3,6 +3,7 @@ class MsgHandlec:
     MSGHEADTYPE = 'ii'
     SAMPLINGTYPE = "fffff"
     PADDING = "###"
+    SHOWPADDING = "::"
     SPARATE = "~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~\n"
     FILEBLOCKSIZE = 10240
     

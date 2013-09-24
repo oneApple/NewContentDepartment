@@ -3,23 +3,29 @@ import wx, os
 from wx.lib.pubsub  import Publisher
 
 from NetCommunication import NetAccept
-from GlobalData import CommonData, MagicNum, ConfigData
+from GlobalData import CommonData, MagicNum, ConfigData, WindowConfig
 from Command import ChoseFileCmd, DataHandleCmd
 import MatrixTable
 from DataBase import MediaTable
 
 class MyFrame(wx.Frame):
     def __init__(self, msg, netconnect):
-        wx.Frame.__init__(self, None, -1, "内容提供部门", size=(1200, 800))
+        self.wcfg = WindowConfig.WindowConfig()
+        wx.Frame.__init__(self, None, -1, "内容提供部门", size=self.wcfg.GetFrameSize())
         self.__permission = msg[1]
         self.audituser = msg[0]
+        
         
         self.__vbox_top = wx.BoxSizer(wx.VERTICAL)
         self.__hbox = wx.BoxSizer(wx.HORIZONTAL)
         self.__panel_top = wx.Panel(self)
         
         self.createHeadStaticText(text="您好:" + msg[2] + ",欢迎使用CUCAuditSys!" + "\n")
-        self.createHeadStaticText(align=wx.ALIGN_LEFT, text="\n" + " 中国传媒大学内容审核系统" + "\n", fontsize=15, fontcolor="blue", backcolor="bisque")
+        self.createHeadStaticText(align=wx.ALIGN_LEFT, text="\n" + " 中国传媒大学内容审核系统" + "\n", \
+                                  fontsize = self.wcfg.GetSystemNameFontSize(),\
+                                  fontcolor = self.wcfg.GetSystemNameFontColor(),\
+                                  backcolor = self.wcfg.GetSystemNameBackColor())
+        
         self.__vbox_top.Add(wx.StaticLine(self.__panel_top), 0, wx.EXPAND | wx.ALL, 5)
         self.createMenuBar()
         
@@ -120,9 +126,9 @@ class MyFrame(wx.Frame):
         _isChangeColor = recvmsg.data[1]
         if _isChangeColor:
             if self.__showTextColor:
-                self.__showText.SetForegroundColour("orange")
+                self.__showText.SetForegroundColour(self.wcfg.GetShowTextFontColor1())
             else:
-                self.__showText.SetForegroundColour("black")
+                self.__showText.SetForegroundColour(self.wcfg.GetShowTextFontColor2())
             self.__showTextColor = not self.__showTextColor
         self.__showText.AppendText(msg)
     
@@ -130,10 +136,9 @@ class MyFrame(wx.Frame):
         "创建右下方的文本显示框"
         _panel = self.createPanel(self.__panel_top)
         
-        Font = wx.Font(25, wx.MODERN, wx.NORMAL, wx.NORMAL)
         self.__showText = wx.TextCtrl(_panel, style=wx.TE_MULTILINE | wx.HSCROLL | wx.TE_READONLY)  
-        self.__showText.SetFont(Font)
-        self.__showText.SetBackgroundColour("white")
+        self.__showText.SetFont(self.wcfg.GetShowTextFont())
+        self.__showText.SetBackgroundColour(self.wcfg.GetShowTextBackColor())
         
         self.createBox([self.__showText, ], _panel, self.__hbox, "信息显示区", 3)
     
@@ -166,10 +171,8 @@ class MyFrame(wx.Frame):
         _panel = self.createPanel(panel)
         
         stext = wx.StaticText(_panel, -1, "")
-        Font = wx.Font(15, wx.MODERN, wx.NORMAL, wx.NORMAL)
-        stext.SetFont(Font)
-        stext.SetForegroundColour("black")
-        stext.SetBackgroundColour("white")
+        stext.SetFont(self.wcfg.GetStaticTextFont())
+        stext.SetForegroundColour(self.wcfg.GetStaticTextFontColor())
 
         self.createBox([stext, ], _panel, hbox, "状态显示区")
         
@@ -326,8 +329,8 @@ class MyFrame(wx.Frame):
             return
         
         attr = wx.grid.GridCellAttr()
-        attr.SetTextColour("white")
-        attr.SetBackgroundColour("pink")
+        attr.SetTextColour(self.wcfg.GetTableChoseFontColor())
+        attr.SetBackgroundColour(self.wcfg.GetTableChoseBackColor())
         self.__grid.SetRowAttr(_pos, attr)
         
         if self.__gridCurPos != -1:

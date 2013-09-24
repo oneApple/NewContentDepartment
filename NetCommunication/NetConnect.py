@@ -5,7 +5,6 @@ import NetThread
 from CryptoAlgorithms import RsaKeyExchange
 from GlobalData import CommonData, ConfigData, MagicNum
 
-
 _metaclass_ = type
 class NetConnect:
     def __init__(self,view):
@@ -17,7 +16,8 @@ class NetConnect:
         
     def ReqConnect(self,name,psw):
         "请求登录"
-        _msgbody = MagicNum.UserTypec.CPUSER + CommonData.MsgHandlec.PADDING + name + CommonData.MsgHandlec.PADDING + psw
+        msglist = [MagicNum.UserTypec.CPUSER , name , psw]
+        _msgbody = NetSocketFun.NetPackMsgBody(msglist)
         _msghead = struct.pack(CommonData.MsgHandlec.MSGHEADTYPE,MagicNum.MsgTypec.REQLOGINMSG,len(_msgbody))
         NetSocketFun.NetSocketSend(self.__Sockfd,_msghead + _msgbody)
     
@@ -26,24 +26,22 @@ class NetConnect:
         _rke = RsaKeyExchange.RsaKeyExchange()
         _rke.GenerateRsaKey()
         _pkeystr = _rke.GetPubkeyStr("own")
-        _msgbody = name + CommonData.MsgHandlec.PADDING + \
-                   psw + CommonData.MsgHandlec.PADDING + \
-                   ip + CommonData.MsgHandlec.PADDING + \
-                   port + CommonData.MsgHandlec.PADDING + \
-                   _pkeystr
+        msglist = [name,psw,ip,port,_pkeystr]
+        _msgbody = NetSocketFun.NetPackMsgBody(msglist)
         _msghead = struct.pack(CommonData.MsgHandlec.MSGHEADTYPE,MagicNum.MsgTypec.REQREGISTERMSG,len(_msgbody))
         NetSocketFun.NetSocketSend(self.__Sockfd,_msghead + _msgbody.decode('gbk').encode("utf-8"))
         
     def ReqAudit(self,filename):
         "请求审核" 
         self.filename = filename
-        _msgbody = filename[-filename[::-1].index("/"):].encode("utf-8")
+        _filename = filename[-filename[::-1].index("/"):].encode("utf-8")
+        _msgbody = NetSocketFun.NetPackMsgBody([_filename])
         _msghead = struct.pack(CommonData.MsgHandlec.MSGHEADTYPE,MagicNum.MsgTypec.REQAUDITMSG, len(_msgbody))
         NetSocketFun.NetSocketSend(self.__Sockfd,_msghead + _msgbody)
         
         import wx
         from wx.lib.pubsub  import Publisher
-        wx.CallAfter(Publisher().sendMessage,CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,["请求审核文件(" + _msgbody + ")".encode("utf8"),False])
+        wx.CallAfter(Publisher().sendMessage,CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,["请求审核文件(" + _filename + ")".encode("utf8"),False])
         
     def StartNetConnect(self):
         "连接服务器并开启网络线程"

@@ -20,7 +20,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _dir = session.filename
         _filename =  _dir[-_dir[::-1].index("/"):]
         _res = _db.searchMedia(_filename)
-        return _res[0][1:3]
+        return NetSocketFun.NetUnPackMsgBody(_res[0][1]), _res[0][2]
     
     def deltempFile(self,session):
         import os
@@ -63,16 +63,16 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
                   "\n(2)文件大小(byte)：" + str(os.path.getsize(_meidaPath))
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         
-        _sparam = _res[0][1].split(CommonData.MsgHandlec.PADDING)
+        _sparam = NetSocketFun.NetUnPackMsgBody(_res[0][1])
         import string
         _iparam = [string.atoi(s) for s in _sparam[:3]] + [string.atof(s) for s in _sparam[3:]]
         
         _cgvs = GetVideoSampling.GetVideoSampling(_filename[:_filename.index(".")],*_iparam)
         try:
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "Ａ组采样过程:",True)
-            return _res[0][1],CommonData.MsgHandlec.PADDING.join(_cgvs.GetSampling())
+            return NetSocketFun.NetUnPackMsgBody(_res[0][1]),NetSocketFun.NetPackMsgBody(_cgvs.GetSampling())
         except:
-            return _res[0][1],CommonData.MsgHandlec.PADDING.join("")
+            return NetSocketFun.NetUnPackMsgBody(_res[0][1]),""
     
     def packMsgBody(self,session):
         "将会话密钥与A组参数用公钥加密，将采样hash用私钥加密（签名）"
@@ -84,16 +84,18 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
                       
         _cfd = ConfigData.ConfigData()
         _rsa = Rsa.Rsa(_cfd.GetKeyPath())
-        _plaintext = str(session.sessionkey) + CommonData.MsgHandlec.PADDING + _agroup[0]
+        msglist = (str(session.sessionkey),) + _agroup[0]
+        _plaintext = NetSocketFun.NetPackMsgBody(msglist)
         _pubkeyMsg = _rsa.EncryptByPubkey(_plaintext.encode("ascii"), session.peername)
         
         _hbs = HashBySha1.HashBySha1()
         _sign = _rsa.SignByPrikey(_hbs.GetHash(_agroup[1].encode("ascii"),MagicNum.HashBySha1c.HEXADECIMAL))
-        _msgbody = _pubkeyMsg + CommonData.MsgHandlec.PADDING \
-                              + _sign + CommonData.MsgHandlec.PADDING + _agroup[1].encode("ascii")
+        msglist = [_pubkeyMsg,_sign,_agroup[1].encode("ascii")]
+        _msgbody = NetSocketFun.NetPackMsgBody(msglist)
         showmsg = "发送采样结果：\n(1)A组参数:\n(帧总数,分组参数,帧间隔位数,混沌初值,分支参数)\n(".decode("utf8") + \
-                  ",".join(_agroup[0].split(CommonData.MsgHandlec.PADDING)) + \
-                  ")\n(2)A组采样:".decode("utf8") + _agroup[1] + "\n(3)A组采样签名：".decode("utf8") + _sign 
+                  ",".join(_agroup[0]) + ")\n(2)A组采样:".decode("utf8") + \
+                  CommonData.MsgHandlec.SHOWPADDING.join(NetSocketFun.NetUnPackMsgBody(_agroup[1]))  \
+                  + "\n(3)A组采样签名：".decode("utf8") + _sign 
         showmsg += "\nCP用AP的公钥加密采样参数A"
         showmsg += "\nCP用其私钥加密比特串承诺值"
         showmsg += "\nCP发送加密的A组参数和加密的比特串承诺值，以及公钥加密TID发送给AP"

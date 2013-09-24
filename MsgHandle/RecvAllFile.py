@@ -13,7 +13,8 @@ class RecvAllFile(MsgHandleInterface.MsgHandleInterface,object):
         super(RecvAllFile,self).__init__() 
         
     def HandleMsg(self,bufsize,session):
-        recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
+        recvmsg = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
+        recvbuffer = NetSocketFun.NetUnPackMsgBody(recvmsg)[0]
         session.file.write(recvbuffer)
         session.file.close()
         if session.threadtype == CommonData.ThreadType.ACCETPNO:

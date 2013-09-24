@@ -3,6 +3,7 @@ from CommandInterface import CommandInterface
 from VideoSampling import GetVideoSampling
 from DataBase import MediaTable
 from GlobalData import CommonData, ConfigData
+from  NetCommunication import NetSocketFun
 
 _metaclass_ = type
 class DataHandleCmd(CommandInterface,object):
@@ -17,10 +18,10 @@ class DataHandleCmd(CommandInterface,object):
     
     def handleParam(self,sampling):
         "将列表转化为字符串"
-        _aparam = CommonData.MsgHandlec.PADDING.join(sampling[0])
-        _ahash = CommonData.MsgHandlec.PADDING.join(sampling[1])
-        _bparam = CommonData.MsgHandlec.PADDING.join(sampling[2])
-        _bhash = CommonData.MsgHandlec.PADDING.join(sampling[3])
+        _aparam = NetSocketFun.NetPackMsgBody(sampling[0])
+        _ahash = NetSocketFun.NetPackMsgBody(sampling[1])
+        _bparam = NetSocketFun.NetPackMsgBody(sampling[2])
+        _bhash = NetSocketFun.NetPackMsgBody(sampling[3])
         return _aparam, _ahash, _bparam, _bhash 
     
     def addNewMedia(self,filename,audituser,sampling):

@@ -23,15 +23,15 @@ class RecvFilename(MsgHandleInterface.MsgHandleInterface,object):
         "接收文件名，并打开文件准备写"
         recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
         self.createMediaDir(session)
-        session.filename = recvbuffer
-        
+        session.filename = NetSocketFun.NetUnPackMsgBody(recvbuffer)[0]
+        session.filename = session.filename.encode("utf-8")
         session.threadtype = CommonData.ThreadType.ACCEPTAP
         
         _localfilename = self.___ownPath + "/" + session.filename
-        session.file = open(_localfilename.encode('utf-8'),"w")
+        session.file = open(_localfilename,"w")
         session.currentbytes = 0
     
-        showmsg = "开始审核返回文件(" + recvbuffer + ")"
+        showmsg = "开始审核返回文件(" + session.filename + ")"
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
         
         import SendDhPAndPubkey

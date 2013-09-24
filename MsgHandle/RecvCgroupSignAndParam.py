@@ -2,7 +2,6 @@
 _metaclass_ = type
 import string
 from NetCommunication import NetSocketFun
-
 from MsgHandle import MsgHandleInterface
 from GlobalData import CommonData, MagicNum, ConfigData
 from DataBase import MediaTable
@@ -29,11 +28,11 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _cfd = ConfigData.ConfigData()
         _rsa = Rsa.Rsa(_cfd.GetKeyPath())
         _plaintext = _rsa.DecryptByPrikey(msglist[0])
-        _plist = _plaintext.split(CommonData.MsgHandlec.PADDING)
+        _plist = NetSocketFun.NetUnPackMsgBody(_plaintext)
         if session.sessionkey == _plist[0]:
             self.__cparam = _plist[1:]
             self.__csign = msglist[1]
-            self.__chash = CommonData.MsgHandlec.PADDING.join(msglist[2:])
+            self.__chash = NetSocketFun.NetPackMsgBody(msglist[2:])
             return True
         else:
             showmsg = "会话密钥验证失败：会话密钥：" + session.sessionkey
@@ -59,7 +58,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
     def verifySign(self,session):
         import string
         _hashlist = []
-        _bparam = self.__bparam.split(CommonData.MsgHandlec.PADDING)
+        _bparam = NetSocketFun.NetUnPackMsgBody(self.__bparam)
         
         showmsg = "正在采样 ..."
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)
@@ -106,14 +105,14 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _filename = session.filename[:session.filename.index(".")]
         _gvs = GetVideoSampling.GetVideoSampling(_filename,*param)
         
-        return CommonData.MsgHandlec.PADDING.join(_gvs.GetSampling()) 
+        return NetSocketFun.NetPackMsgBody(_gvs.GetSampling())
     
     def compareSamplingHash(self,localhash,recvhash):
         "分组验证"
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,"分组进行比对:",True)
         difList = []
-        localhash = localhash.split(CommonData.MsgHandlec.PADDING)
-        recvlist = recvhash.split(CommonData.MsgHandlec.PADDING)
+        localhash = NetSocketFun.NetUnPackMsgBody(localhash)
+        recvlist = NetSocketFun.NetUnPackMsgBody(recvhash)
         for i in range(len(recvlist)):
             try:
                 if localhash[i] != recvlist[i]:
@@ -127,7 +126,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
                 break
         
         import string
-        _bparam = self.__bparam.split(CommonData.MsgHandlec.PADDING)
+        _bparam = NetSocketFun.NetUnPackMsgBody(self.__bparam)
         _fnum = string.atoi(_bparam[0])
         _gt = string.atoi(_bparam[1])
         
@@ -155,7 +154,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
     
     def HandleMsg(self,bufsize,session):
         recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
-        _msglist = recvbuffer.split(CommonData.MsgHandlec.PADDING)
+        _msglist = NetSocketFun.NetUnPackMsgBody(recvbuffer)
         if self.handleDhkeyAndCgroupParam(_msglist, session) == True:
             try:
                 self.getBgroupSignAndParam(session)

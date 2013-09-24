@@ -22,8 +22,8 @@ class SendDhPAndPubkey(MsgHandleInterface.MsgHandleInterface,object):
                                                                                  
     def HandleMsg(self,bufsize,session):
         "发送迪菲参数p和公钥，及该消息的签名"                
-        _dhkeymsg = self.getDhpAndga(session)
-        msgbody = CommonData.MsgHandlec.PADDING.join(_dhkeymsg)
+        msglist = self.getDhpAndga(session)
+        msgbody = NetSocketFun.NetPackMsgBody(msglist)
         msghead = self.packetMsg(MagicNum.MsgTypec.SENDDHPANDPUBKEY ,len(msgbody))
         NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody)
         if not session.peername:

@@ -27,9 +27,8 @@ class SendRegisterResult(MsgHandleInterface.MsgHandleInterface,object):
     
     def HandleMsg(self,bufsize,session):
         "返回注册信息并保存用户名"
-        _recvmsg = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
-        _loginmsg = _recvmsg.split(CommonData.MsgHandlec.PADDING) + [MagicNum.CPUserTablec.UNACCEPT]
-        _loginmsg
+        recvmsg = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
+        _loginmsg = NetSocketFun.NetUnPackMsgBody(recvmsg) + [MagicNum.CPUserTablec.UNACCEPT]
         if self.verifyUser(_loginmsg[0]) == False:
             restype = MagicNum.MsgTypec.REGISTERFAIL
             msghead = self.packetMsg(restype,0)
@@ -41,6 +40,6 @@ class SendRegisterResult(MsgHandleInterface.MsgHandleInterface,object):
             from CryptoAlgorithms import RsaKeyExchange
             _rke = RsaKeyExchange.RsaKeyExchange()
             _rke.WritePubkeyStr(session.name, _loginmsg[-2])
-            msgbody = _rke.GetPubkeyStr("own")
+            msgbody = NetSocketFun.NetPackMsgBody([_rke.GetPubkeyStr("own")])
             msghead = self.packetMsg(restype,len(msgbody))
             NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody.decode('gbk').encode("utf-8") )

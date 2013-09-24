@@ -36,7 +36,7 @@ class RecvDhPubkeyAndSendDhGenerateSuccess(MsgHandleInterface.MsgHandleInterface
     
     def HandleMsg(self,bufsize,session):
         "接受对方传来的dh参数及公钥并生成自己的dh公钥"
-        recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
-        dhmsg = recvbuffer.split(CommonData.MsgHandlec.PADDING)
+        recvmsg = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
+        dhmsg = NetSocketFun.NetUnPackMsgBody(recvmsg)
         #参数p：公钥：签名
         self.verifyMsgSign(dhmsg[0], dhmsg[1], session)

@@ -20,7 +20,7 @@ class RecvDhGenerateSuccess(MsgHandleInterface.MsgHandleInterface,object):
     
     def HandleMsg(self,bufsize,session):
         _permission = self.getUserPermission(session.peername)
-        msgbody = str(_permission)
+        msgbody = NetSocketFun.NetPackMsgBody([str(_permission)])
         msghead = self.packetMsg(MagicNum.MsgTypec.LOGINSUCCESS,len(msgbody))
         NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody)
         

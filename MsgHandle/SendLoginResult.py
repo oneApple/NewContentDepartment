@@ -20,12 +20,11 @@ class SendLoginResult(MsgHandleInterface.MsgHandleInterface,object):
     
     def HandleMsg(self,bufsize,session):
         "返回登录结果，并保存用户名"
-        _recvmsg = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
-        _recvmsg = eval(_recvmsg)
-        _loginmsg = _recvmsg.split(CommonData.MsgHandlec.PADDING)
+        recvmsg = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
+        _loginmsg = NetSocketFun.NetUnPackMsgBody(eval(recvmsg))[0]
         _res = self.verifyUser(_loginmsg[0], _loginmsg[1])
         if  _res != False:
-            msgbody = str(_res)
+            msgbody = NetSocketFun.NetPackMsgBody([str(_res)])
             msghead = self.packetMsg(MagicNum.MsgTypec.LOGINSUCCESS,len(msgbody))
             NetSocketFun.NetSocketSend(session.sockfd,msghead + msgbody)
             session.peername = _loginmsg[0]
