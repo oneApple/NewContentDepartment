@@ -1,3 +1,4 @@
+
 # -*- coding: UTF-8 -*-
 _metaclass_ = type
 
@@ -59,8 +60,9 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _efm.WaitForProcess()
         
         import os
+        filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
         showmsg = "采样完成:\n(1)总帧数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
-                  "\n(2)文件大小(byte)：" + str(os.path.getsize(_meidaPath))
+                  "\n(2)文件大小（MB）：" + str(filesize)
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         
         _sparam = NetSocketFun.NetUnPackMsgBody(_res[0][1])

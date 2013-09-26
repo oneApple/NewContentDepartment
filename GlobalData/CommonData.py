@@ -23,6 +23,7 @@ class ViewPublisherc:
     MAINFRAME_APPENDTEXT = "mainframeappendtext"
     MAINFRAME_REFRESHSTATIC = "mainframerefstatic"
     MAINFRAME_REFRESHFILETABLE = "mainframereffiletable"
+    FULLFRAME_APPENDTEXT = "fullframeappendtext"
 
 class MainFramec:
     usermenu = {"用户审核".decode("utf8"):"UserAudit","用户删除".decode("utf-8"):"DeleteUser"}

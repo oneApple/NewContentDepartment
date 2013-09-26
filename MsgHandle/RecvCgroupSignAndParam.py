@@ -32,7 +32,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         if session.sessionkey == _plist[0]:
             self.__cparam = _plist[1:]
             self.__csign = msglist[1]
-            self.__chash = NetSocketFun.NetPackMsgBody(msglist[2:])
+            self.__chash = msglist[2]
             return True
         else:
             showmsg = "会话密钥验证失败：会话密钥：" + session.sessionkey
@@ -68,8 +68,9 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _efm.WaitForProcess()
         
         import os
+        filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
         showmsg = "采样完成:\n(1)总帧数：" + self.getFrameNum(session.filename) + \
-                  "\n(2)文件大小(byte)：" + str(os.path.getsize(_meidaPath))
+                  "\n(2)文件大小（MB）：" + str(filesize)
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         
         showmsg = ["B组采样过程：","C组采样过程："]
@@ -93,10 +94,10 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)
             return False
         else:
-            self.compareSamplingHash(_hashlist[1],self.__chash)
+            self.compareSamplingHash(_hashlist[1],self.__chash,title = "Ｃ组")
             showmsg = "签名验证成功,该文件在传输过程中未被篡改"
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)
-            self.compareSamplingHash(_hashlist[0],self.__bhash)
+            self.compareSamplingHash(_hashlist[0],self.__bhash,title = "Ｂ组")
             showmsg = "文件验证成功,该文件未被审核部门修改"
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)
             return True
@@ -107,9 +108,9 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         
         return NetSocketFun.NetPackMsgBody(_gvs.GetSampling())
     
-    def compareSamplingHash(self,localhash,recvhash):
+    def compareSamplingHash(self,localhash,recvhash,title = ""):
         "分组验证"
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,"分组进行比对:",True)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,title + "分组进行比对:",True)
         difList = []
         localhash = NetSocketFun.NetUnPackMsgBody(localhash)
         recvlist = NetSocketFun.NetUnPackMsgBody(recvhash)

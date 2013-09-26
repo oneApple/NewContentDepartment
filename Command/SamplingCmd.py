@@ -27,7 +27,8 @@ class SamplingCmd(CommandInterface,object):
         _e.WaitForProcess()
         
         self.getFrameNumAndFileSize()
-        showmsg = "采样完成:\n(1)总帧数：" + str(self.__framenum) + "\n(2)文件大小(byte)：" + str(self.__filesize)
+        filesize = float(self.__filesize) / (1024 * 1024)
+        showmsg = "采样完成:\n(1)总帧数：" + str(self.__framenum) + "\n(2)文件大小（MB）：" + str(filesize)
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REWRITETEXT, [showmsg,True])
 
         

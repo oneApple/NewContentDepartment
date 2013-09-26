@@ -5,7 +5,7 @@ from wx.lib.pubsub  import Publisher
 from NetCommunication import NetAccept
 from GlobalData import CommonData, MagicNum, ConfigData, WindowConfig
 from Command import ChoseFileCmd, DataHandleCmd
-import MatrixTable
+import MatrixTable, FullScreenFrame
 from DataBase import MediaTable
 
 class MyFrame(wx.Frame):
@@ -42,10 +42,14 @@ class MyFrame(wx.Frame):
         self.__gridCurPos = -1
         self.__showTextColor = True
         
+        self.fullframe = FullScreenFrame.FullScreenFrame(self,-1,"信息显示区")    
+        
         self.netconnect = netconnect
         self.__netaccept = NetAccept.NetAccept(self)
         self.__netaccept.startNetConnect()
-    
+        
+            
+        
     def OnCloseWindow(self,evt):
         self.Destroy()
         try:
@@ -123,6 +127,9 @@ class MyFrame(wx.Frame):
         "添加新行"
         msg = recvmsg.data[0].decode("utf8")
         msg += "\n"
+        
+        wx.CallAfter(Publisher().sendMessage,CommonData.ViewPublisherc.FULLFRAME_APPENDTEXT,recvmsg.data)
+        
         _isChangeColor = recvmsg.data[1]
         if _isChangeColor:
             if self.__showTextColor:
@@ -130,7 +137,12 @@ class MyFrame(wx.Frame):
             else:
                 self.__showText.SetForegroundColour(self.wcfg.GetShowTextFontColor2())
             self.__showTextColor = not self.__showTextColor
+
         self.__showText.AppendText(msg)
+        
+    def evtShowTextDoubleClick(self,evt):
+        self.fullframe.ShowFullScreenFrame()
+        self.Hide()
     
     def createShowTextCtrl(self):
         "创建右下方的文本显示框"
@@ -139,6 +151,7 @@ class MyFrame(wx.Frame):
         self.__showText = wx.TextCtrl(_panel, style=wx.TE_MULTILINE | wx.HSCROLL | wx.TE_READONLY)  
         self.__showText.SetFont(self.wcfg.GetShowTextFont())
         self.__showText.SetBackgroundColour(self.wcfg.GetShowTextBackColor())
+        self.__showText.Bind(wx.EVT_LEFT_DCLICK, self.evtShowTextDoubleClick)
         
         self.createBox([self.__showText, ], _panel, self.__hbox, "信息显示区", 3)
     
@@ -404,6 +417,7 @@ class MyFrame(wx.Frame):
     
     def menuClearDisplayCmd(self, event):
         self.__showText.Clear()
+        self.fullframe.clearShowText()
     
     def Run(self):
         self.Center()
