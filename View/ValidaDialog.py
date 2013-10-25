@@ -75,12 +75,15 @@ class ValidaDialog(wx.Dialog):
     def createHeaderButton(self):
         "创建头部按钮"
         from GlobalData import ConfigData
-        _config = ConfigData.ConfigData()
-        jpg = wx.Image(_config.GetIcoPath(),wx.BITMAP_TYPE_JPEG).ConvertToBitmap()
-        fileButton=wx.BitmapButton(self,-1,jpg)
-        self.Bind(wx.EVT_BUTTON,self.registerButtonFun,fileButton)
-        self.sizer.Add(fileButton, 0, wx.EXPAND, 5)
-        self.sizer.Add(wx.StaticLine(self), 0, wx.EXPAND|wx.ALL, 5)
+        try:
+            _config = ConfigData.ConfigData()
+            jpg = wx.Image(_config.GetIcoPath(),wx.BITMAP_TYPE_JPEG).ConvertToBitmap()
+            fileButton=wx.BitmapButton(self,-1,jpg)
+            self.Bind(wx.EVT_BUTTON,self.registerButtonFun,fileButton)
+            self.sizer.Add(fileButton, 0, wx.EXPAND, 5)
+            self.sizer.Add(wx.StaticLine(self), 0, wx.EXPAND|wx.ALL, 5)
+        except:
+            wx.MessageBox("配置文件不存在或路径错误","错误",wx.ICON_ERROR|wx.YES_DEFAULT)
     
     def createHeader(self,type):
         "创建头部"

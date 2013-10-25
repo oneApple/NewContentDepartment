@@ -5,12 +5,13 @@ from wx.lib.pubsub  import Publisher
 import ValidaDialog
 import RegisterDialog
 import MainFrame
-from GlobalData import MagicNum, CommonData
+from GlobalData import MagicNum, CommonData,ConfigData
 from NetCommunication import NetConnect
 
 class LoginDialog(ValidaDialog.ValidaDialog,object):
     def __init__(self,netconnect):
         super(LoginDialog,self).__init__("登录",MagicNum.ValidaDialogc.IMAGEBUTTON)
+        self.CheckConfig()
         if not netconnect:
             self.__netconnect = NetConnect.NetConnect(self)
             if self.__netconnect.StartNetConnect() == MagicNum.NetConnectc.NOTCONNECT:
@@ -18,7 +19,22 @@ class LoginDialog(ValidaDialog.ValidaDialog,object):
         else :
             self.__netconnect = netconnect
         self.registerPublisher()
-        
+    
+    def CheckConfig(self):
+        try:
+            cfg = ConfigData.ConfigData()
+            pathmap = {cfg.GetDbPath():"数据库配置不正确",
+               cfg.GetYVectorFilePath():"采样存放路径配置不正确",
+               cfg.GetFfmpegPathAndArgs()[0]:"ffmpeg程序配置不正确",
+               cfg.GetKeyPath():"密钥路径配置不正确"
+               }
+            for path in pathmap:
+                import os
+                if not os.path.exists(path):
+                    self.tryAgain(pathmap[path])
+        except Exception,e:
+            self.tryAgain("配置文件不存在或路径错误")
+    
     def registerPublisher(self):
         Publisher().subscribe(self.tryAgain, CommonData.ViewPublisherc.LOGIN_TRYAGAIN)    
         Publisher().subscribe(self.SwitchView, CommonData.ViewPublisherc.LOGIN_SWITCH)     
