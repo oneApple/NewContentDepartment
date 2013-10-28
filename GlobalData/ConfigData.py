@@ -8,7 +8,7 @@ class ConfigData:
     def __init__(self):
         "配置文件为CONFIGFILE"
         self.__cfg = ConfigParser()
-        self.__cfg.read(CONFIGFILE)
+        self.__cfg.read(ConfigData.CONFIGFILE)
         
     def GetDbPath(self):
         "获取数据库路径"

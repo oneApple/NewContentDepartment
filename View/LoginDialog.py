@@ -33,6 +33,7 @@ class LoginDialog(ValidaDialog.ValidaDialog,object):
                 if not os.path.exists(path):
                     self.tryAgain(pathmap[path])
         except Exception,e:
+            print e
             self.tryAgain("配置文件不存在或路径错误")
     
     def registerPublisher(self):
