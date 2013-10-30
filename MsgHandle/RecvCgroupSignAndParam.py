@@ -67,11 +67,11 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _efm.Run()
         _efm.WaitForProcess()
         
-        import os
-        filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
-        showmsg = "采样完成:\n(1)总帧数：" + self.getFrameNum(session.filename) + \
-                  "\n(2)文件大小（MB）：" + str(filesize)
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
+#        import os
+#        filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
+#        showmsg = "采样完成:\n(1)I帧总数：" + self.getFrameNum(session.filename) + \
+#                  "\n(2)文件大小（MB）：" + str(filesize)
+#        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         
         showmsg = ["B组采样过程：","C组采样过程："]
         for _param in [_bparam,self.__cparam]:
@@ -80,7 +80,12 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg[len(_hashlist)],True)
             _hashlist.append(self.computeSingleSampling(session, _argum))
             
-            
+        import os
+        filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
+        showmsg = "采样完成:\n(1)I帧总数：" + self.getFrameNum(session.filename) + \
+                  "\n(2)文件大小（MB）：" + str(filesize)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
+        
         self.deltempFile(session)
         
         if not self.verifySignleSign(_hashlist[1], self.__csign, session):
@@ -157,15 +162,24 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         recvbuffer = NetSocketFun.NetSocketRecv(session.sockfd,bufsize)
         _msglist = NetSocketFun.NetUnPackMsgBody(recvbuffer)
         if self.handleDhkeyAndCgroupParam(_msglist, session) == True:
-            try:
-                self.getBgroupSignAndParam(session)
-            except:
-                import wx
-                wx.MessageBox("该文件不存在","错误",wx.ICON_ERROR|wx.YES_DEFAULT)
-                return
+#            try:
+            self.getBgroupSignAndParam(session)
+                
+            showmsg = "解密获取参数及采样结果:\n(1)B组参数：\n(帧总数,分组参数,帧间隔位数,混沌初值,分支参数)\n(" + \
+                  ",".join(NetSocketFun.NetUnPackMsgBody(self.__bparam)) + ")\n(2)B组采样签名：" + _msglist[1]
+            showmsg += "\n(3)C组参数：\n(帧总数,分组参数,帧间隔位数,混沌初值,分支参数)\n(" + \
+                  ",".join(self.__cparam) + ")\n(4)C组采样签名：" + self.__csign
+            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
+#            except Exception ,e:
+#                print e
+#                import wx
+#                wx.MessageBox("该文件不存在","错误",wx.ICON_ERROR|wx.YES_DEFAULT)
+#                return
             if self.verifySign(session) == True:
-                showmsg = "收到采样结果:\n(1)B组参数：" + ",".join(self.__bparam.split(CommonData.MsgHandlec.PADDING)) + "\n(2)B组采样签名：" + _msglist[1]
-                showmsg += "\n(3)C组参数：" + ",".join(self.__cparam) + "\n(4)C组采样签名：" + self.__csign + "\n审核返回成功"
+#                showmsg = "收到采样结果:\n(1)B组参数：" + ",".join(self.__bparam.split(CommonData.MsgHandlec.PADDING)) + "\n(2)B组采样签名：" + _msglist[1]
+#                showmsg += "\n(3)C组参数：" + ",".join(self.__cparam) + "\n(4)C组采样签名：" + self.__csign + "\n审核返回成功"
+#                self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
+                showmsg = "审核返回成功"
                 self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
                 msghead = self.packetMsg(MagicNum.MsgTypec.AUDITRETURNSUCCESS,0)
                 NetSocketFun.NetSocketSend(session.sockfd,msghead)

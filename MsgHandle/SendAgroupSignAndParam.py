@@ -61,7 +61,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         
         import os
         filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
-        showmsg = "采样完成:\n(1)总帧数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
+        showmsg = "采样完成:\n(1)I帧总数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
                   "\n(2)文件大小（MB）：" + str(filesize)
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         

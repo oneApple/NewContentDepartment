@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-import wx
+import wx,os
 from wx.lib.pubsub  import Publisher
 
 import ValidaDialog
@@ -26,15 +26,15 @@ class LoginDialog(ValidaDialog.ValidaDialog,object):
             pathmap = {cfg.GetDbPath():"数据库配置不正确",
                cfg.GetYVectorFilePath():"采样存放路径配置不正确",
                cfg.GetFfmpegPathAndArgs()[0]:"ffmpeg程序配置不正确",
-               cfg.GetKeyPath():"密钥路径配置不正确"
+               cfg.GetFfmpegPathAndArgs()[1]:"ffmpeg参数配置不正确",
+               cfg.GetKeyPath():"密钥路径配置不正确",
                }
             for path in pathmap:
-                import os
                 if not os.path.exists(path):
-                    self.tryAgain(pathmap[path])
+                    self.setHeaderText(pathmap[path])
         except Exception,e:
-            print e
-            self.tryAgain("配置文件不存在或路径错误")
+            self.setHeaderText("配置文件不存在或路径错误")
+            os.sys.exit()
     
     def registerPublisher(self):
         Publisher().subscribe(self.tryAgain, CommonData.ViewPublisherc.LOGIN_TRYAGAIN)    
