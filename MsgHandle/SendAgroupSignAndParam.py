@@ -59,11 +59,11 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _efm.Run()
         _efm.WaitForProcess()
         
-        import os
-        filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
-        showmsg = "采样完成:\n(1)I帧总数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
-                  "\n(2)文件大小（MB）：" + str(filesize)
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
+#        import os
+#        filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
+#        showmsg = "采样完成:\n(1)I帧总数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
+#                  "\n(2)文件大小（MB）：" + str(filesize)
+#        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         
         _sparam = NetSocketFun.NetUnPackMsgBody(_res[0][1])
         import string
@@ -82,6 +82,15 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             _agroup = self.APgetAgroupHashAndParam(session)
         elif session.threadtype == CommonData.ThreadType.ACCETPNO:
             _agroup = self.NOgetAgroupHashAndParam(session)
+            
+            import os
+            _dir = session.filename
+            _meidaPath = self.__mediapath + "/auditserver/" + _dir[-_dir[::-1].index("/"):]
+            filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
+            showmsg = "采样完成:\n(1)I帧总数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
+                  "\n(2)文件大小（MB）：" + str(filesize)
+            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
+            
             self.deltempFile(session)
                       
         _cfd = ConfigData.ConfigData()
