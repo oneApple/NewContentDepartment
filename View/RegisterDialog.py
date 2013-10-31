@@ -7,9 +7,10 @@ import LoginDialog
 from GlobalData import MagicNum, CommonData
 
 class RegisterDialog(ValidaDialog.ValidaDialog,object):
-    def __init__(self,netconnect):
+    def __init__(self,netconnect,logindlg):
         super(RegisterDialog,self).__init__("注册",MagicNum.ValidaDialogc.STATICTEXT)
         self.__netconnect = netconnect
+        self.__logindlg = logindlg
         self.registerPublisher()
         
     def registerPublisher(self):
@@ -34,8 +35,10 @@ class RegisterDialog(ValidaDialog.ValidaDialog,object):
 
     def SwitchView(self,msg):
         self.Destroy()
-        _loginFrame = LoginDialog.LoginDialog(self.__netconnect)
-        _loginFrame.Run()
+        #_loginFrame = LoginDialog.LoginDialog(self.__netconnect)
+        #_loginFrame.Run()
+        #self.__logindlg.Show()
+        wx.MessageBox("已注册成功，请重启程序登录")
 
     def addNewUser(self,inputlist):
         del inputlist[1]

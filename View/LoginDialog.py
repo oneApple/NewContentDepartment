@@ -61,8 +61,8 @@ class LoginDialog(ValidaDialog.ValidaDialog,object):
         self.__netconnect.ReqConnect(_inputlist[0], _inputlist[1])
             
     def registerButtonFun(self,event):
-        self.Destroy()
-        _dlg = RegisterDialog.RegisterDialog(self.__netconnect)
+        self.Hide()
+        _dlg = RegisterDialog.RegisterDialog(self.__netconnect,self)
         _dlg.Run()
         
         
