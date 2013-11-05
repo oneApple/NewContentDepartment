@@ -21,7 +21,7 @@ class MyFrame(wx.Frame):
         self.__panel_top = wx.Panel(self)
         
         self.createHeadStaticText(text="您好:" + msg[2] + ",欢迎使用CUCAuditSys!" + "\n")
-        self.createHeadStaticText(align=wx.ALIGN_LEFT, text="\n" + " 中国传媒大学内容审核系统" + "\n", \
+        self.createHeadStaticText(align=wx.ALIGN_LEFT, text="\n" + " 互信系统" + "\n", \
                                   fontsize = self.wcfg.GetSystemNameFontSize(),\
                                   fontcolor = self.wcfg.GetSystemNameFontColor(),\
                                   backcolor = self.wcfg.GetSystemNameBackColor())
