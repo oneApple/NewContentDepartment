@@ -51,7 +51,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _filename =  _dir[-_dir[::-1].index("/"):]
         _res = _db.searchMedia(_filename)
         
-        showmsg = "正在采样 ..."
+        showmsg = "正在特征提取 ..."
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)
         from VideoSampling import ExecuteFfmpeg,GetVideoSampling
         _meidaPath = self.__mediapath + "/auditserver/" + _dir[-_dir[::-1].index("/"):]
@@ -61,7 +61,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         
 #        import os
 #        filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
-#        showmsg = "采样完成:\n(1)I帧总数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
+#        showmsg = "特征提取完成:\n(1)I帧总数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
 #                  "\n(2)文件大小（MB）：" + str(filesize)
 #        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         
@@ -71,13 +71,13 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         
         _cgvs = GetVideoSampling.GetVideoSampling(_filename[:_filename.index(".")],*_iparam)
         try:
-            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "Ａ组采样过程:",True)
+            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "Ａ组特征提取过程:",True)
             return NetSocketFun.NetUnPackMsgBody(_res[0][1]),NetSocketFun.NetPackMsgBody(_cgvs.GetSampling())
         except:
             return NetSocketFun.NetUnPackMsgBody(_res[0][1]),""
     
     def packMsgBody(self,session):
-        "将会话密钥与A组参数用公钥加密，将采样hash用私钥加密（签名）"
+        "将会话密钥与A组参数用公钥加密，将特征提取hash用私钥加密（签名）"
         if session.threadtype == CommonData.ThreadType.CONNECTAP:
             _agroup = self.APgetAgroupHashAndParam(session)
         elif session.threadtype == CommonData.ThreadType.ACCETPNO:
@@ -87,7 +87,7 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             _dir = session.filename
             _meidaPath = self.__mediapath + "/auditserver/" + _dir[-_dir[::-1].index("/"):]
             filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
-            showmsg = "采样完成:\n(1)I帧总数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
+            showmsg = "特征提取完成:\n(1)I帧总数：" + self.getFrameNum(_dir[-_dir[::-1].index("/"):]) + \
                   "\n(2)文件大小（MB）：" + str(filesize)
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
             
@@ -103,11 +103,11 @@ class SendAgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _sign = _rsa.SignByPrikey(_hbs.GetHash(_agroup[1].encode("ascii"),MagicNum.HashBySha1c.HEXADECIMAL))
         msglist = [_pubkeyMsg,_sign,_agroup[1].encode("ascii")]
         _msgbody = NetSocketFun.NetPackMsgBody(msglist)
-        showmsg = "发送采样结果：\n(1)A组参数:\n(帧总数,分组参数,帧间隔位数,混沌初值,分支参数)\n(".decode("utf8") + \
-                  ",".join(_agroup[0]) + ")\n(2)A组采样:".decode("utf8") + \
+        showmsg = "发送特征提取结果：\n(1)A组参数:\n(帧总数,分组参数,帧间隔位数,混沌初值,分支参数)\n(".decode("utf8") + \
+                  ",".join(_agroup[0]) + ")\n(2)A组特征提取:".decode("utf8") + \
                   CommonData.MsgHandlec.SHOWPADDING.join(NetSocketFun.NetUnPackMsgBody(_agroup[1]))  \
-                  + "\n(3)A组采样签名：".decode("utf8") + _sign 
-        showmsg += "\nCP用AP的公钥加密采样参数A"
+                  + "\n(3)A组特征提取签名：".decode("utf8") + _sign 
+        showmsg += "\nCP用AP的公钥加密特征提取参数A"
         showmsg += "\nCP用其私钥加密比特串承诺值"
         showmsg += "\nCP发送加密的A组参数和加密的比特串承诺值，以及公钥加密TID发送给AP"
         showmsg += "\n等待文件验证..."

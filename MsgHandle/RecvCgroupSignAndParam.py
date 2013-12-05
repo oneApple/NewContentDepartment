@@ -40,7 +40,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             return False
     
     def verifySignleSign(self,sampling,sign,session):
-        "验证C组采样是否符合收到的C组签名"
+        "验证C组特征提取是否符合收到的C组签名"
         _cfd = ConfigData.ConfigData()
         _rsa = Rsa.Rsa(_cfd.GetKeyPath())
         
@@ -60,7 +60,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _hashlist = []
         _bparam = NetSocketFun.NetUnPackMsgBody(self.__bparam)
         
-        showmsg = "正在采样 ..."
+        showmsg = "正在特征提取 ..."
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)
         _meidaPath = self.__mediapath + "/" + session.peername + "/" + session.filename
         _efm = ExecuteFfmpeg.ExecuteFfmpeg(_meidaPath)
@@ -69,11 +69,11 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         
 #        import os
 #        filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
-#        showmsg = "采样完成:\n(1)I帧总数：" + self.getFrameNum(session.filename) + \
+#        showmsg = "特征提取完成:\n(1)I帧总数：" + self.getFrameNum(session.filename) + \
 #                  "\n(2)文件大小（MB）：" + str(filesize)
 #        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         
-        showmsg = ["B组采样过程：","C组采样过程："]
+        showmsg = ["B组特征提取过程：","C组特征提取过程："]
         for _param in [_bparam,self.__cparam]:
             _argum = [string.atoi(s) for s in _param[:3]]
             _argum += [string.atof(s) for s in _param[3:]]
@@ -82,7 +82,7 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
             
         import os
         filesize = float(os.path.getsize(_meidaPath)) / (1024 * 1024)
-        showmsg = "采样完成:\n(1)I帧总数：" + self.getFrameNum(session.filename) + \
+        showmsg = "特征提取完成:\n(1)I帧总数：" + self.getFrameNum(session.filename) + \
                   "\n(2)文件大小（MB）：" + str(filesize)
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg,True)
         
@@ -139,9 +139,9 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
         _groupborder = [x * (_fnum / _gt) for x in range(_gt)] + [_fnum]
         
         if len(difList) == 0:
-            showmsg = "结果：采样验证成功，该文件未被篡改"
+            showmsg = "结果：特征提取验证成功，该文件未被篡改"
         else:
-            showmsg = "结果：采样验证失败，该文件被篡改,其中"
+            showmsg = "结果：特征提取验证失败，该文件被篡改,其中"
         for _dif in difList:
             showmsg += "\n第" + str(_dif) + "组存在篡改，篡改帧区间为：" + str(_groupborder[_dif]) + "-" + str(_groupborder[_dif + 1]) +"帧"
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, showmsg)
@@ -165,10 +165,10 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
 #            try:
             self.getBgroupSignAndParam(session)
                 
-            showmsg = "解密获取参数及采样结果:\n(1)B组参数：\n(帧总数,分组参数,帧间隔位数,混沌初值,分支参数)\n(" + \
-                  ",".join(NetSocketFun.NetUnPackMsgBody(self.__bparam)) + ")\n(2)B组采样签名：" + _msglist[1]
+            showmsg = "解密获取参数及特征提取结果:\n(1)B组参数：\n(帧总数,分组参数,帧间隔位数,混沌初值,分支参数)\n(" + \
+                  ",".join(NetSocketFun.NetUnPackMsgBody(self.__bparam)) + ")\n(2)B组特征提取签名：" + _msglist[1]
             showmsg += "\n(3)C组参数：\n(帧总数,分组参数,帧间隔位数,混沌初值,分支参数)\n(" + \
-                  ",".join(self.__cparam) + ")\n(4)C组采样签名：" + self.__csign
+                  ",".join(self.__cparam) + ")\n(4)C组特征提取签名：" + self.__csign
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
 #            except Exception ,e:
 #                print e
@@ -176,8 +176,8 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
 #                wx.MessageBox("该文件不存在","错误",wx.ICON_ERROR|wx.YES_DEFAULT)
 #                return
             if self.verifySign(session) == True:
-#                showmsg = "收到采样结果:\n(1)B组参数：" + ",".join(self.__bparam.split(CommonData.MsgHandlec.PADDING)) + "\n(2)B组采样签名：" + _msglist[1]
-#                showmsg += "\n(3)C组参数：" + ",".join(self.__cparam) + "\n(4)C组采样签名：" + self.__csign + "\n审核返回成功"
+#                showmsg = "收到特征提取结果:\n(1)B组参数：" + ",".join(self.__bparam.split(CommonData.MsgHandlec.PADDING)) + "\n(2)B组特征提取签名：" + _msglist[1]
+#                showmsg += "\n(3)C组参数：" + ",".join(self.__cparam) + "\n(4)C组特征提取签名：" + self.__csign + "\n审核返回成功"
 #                self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
                 showmsg = "审核返回成功"
                 self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
@@ -190,8 +190,9 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
                 _db.AlterMedia("status", MagicNum.MediaTablec.AUDIT,session.filename)
                 _db.CloseCon()
                 self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHFILETABLE,"")
+                self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[session.filename,"审核返回完毕"])
                 return
-            
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[session.filename,"审核返回完毕"])
         msghead = self.packetMsg(MagicNum.MsgTypec.IDENTITYVERIFYFAILED,0)
         NetSocketFun.NetSocketSend(session.sockfd,msghead)
         

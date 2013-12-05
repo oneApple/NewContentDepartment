@@ -3,7 +3,7 @@ from CryptoAlgorithms import Chaos
 from GlobalData import CommonData
 
 class SamplingFrameArray:
-    "获取采样帧的序列"
+    "获取特征提取帧的序列"
     def __init__(self,framenum,gt,X,x0,u):
         self.__fnum = framenum
         self.__gt = gt

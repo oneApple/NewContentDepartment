@@ -24,7 +24,7 @@ class LoginDialog(ValidaDialog.ValidaDialog,object):
         try:
             cfg = ConfigData.ConfigData()
             pathmap = {cfg.GetDbPath():"数据库配置不正确",
-               cfg.GetYVectorFilePath():"采样存放路径配置不正确",
+               cfg.GetYVectorFilePath():"特征提取存放路径配置不正确",
                cfg.GetFfmpegPathAndArgs()[0]:"ffmpeg程序配置不正确",
                cfg.GetFfmpegPathAndArgs()[1]:"ffmpeg参数配置不正确",
                cfg.GetKeyPath():"密钥路径配置不正确",

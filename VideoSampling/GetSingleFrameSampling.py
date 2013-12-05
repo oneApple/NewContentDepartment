@@ -2,7 +2,7 @@
 from GlobalData import ConfigData
 
 class GetSingleFrameSampling:
-    "获取每帧的采样"
+    "获取每帧的特征提取"
     def getFrameFileData(self,frame,filename):
         "获取文件数据"
         self.__frameData = []
@@ -16,7 +16,7 @@ class GetSingleFrameSampling:
         del self.__frameData[_len - 2]
     
     def GetSingleSampling(self,frame,filename,region,unit):
-        "获取一个帧的采样，以字符串形式输出"
+        "获取一个帧的特征提取，以字符串形式输出"
         self.getFrameFileData(frame,filename)
         _rrowlen = len(self.__frameData) / 3
         _rcollen = len(self.__frameData[0]) / 3 

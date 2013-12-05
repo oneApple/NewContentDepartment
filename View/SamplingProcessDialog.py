@@ -20,12 +20,20 @@ def Sampling(path,frame):
     _efm.Run()
     _efm.WaitForProcess()
     frame.frame.getFrameNum()
-    frame.Destroy()
-    thread.exit_thread()  
+    
+    try:
+        _dir = frame.frame.filename
+        _filename = _dir[-_dir[::-1].index("/"):]
+        frame.frame.refreshStaticText([_filename, "预提取完成"])
+    except:
+        return
+    finally:
+        frame.Destroy()
+        thread.exit_thread()  
      
 class SamplingProcessDialog(wx.Dialog):
     def __init__(self,path,frame):
-        wx.Dialog.__init__(self, None, -1, '正在采样中...',size = (400,150))
+        wx.Dialog.__init__(self, None, -1, '正在特征提取中...',size = (400,150))
         panel = wx.Panel(self, -1)
         panel.SetBackgroundColour("white")
         self.count = 0

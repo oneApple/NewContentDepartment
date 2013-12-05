@@ -7,7 +7,7 @@ from  NetCommunication import NetSocketFun
 
 _metaclass_ = type
 class DataHandleCmd(CommandInterface,object):
-    "将采样数据进行hash并记录入数据库"
+    "将特征提取数据进行hash并记录入数据库"
     def __init__(self,view,aparams,bparams):
         super(DataHandleCmd,self).__init__(view)
         _cfg = ConfigData.ConfigData()
@@ -39,17 +39,17 @@ class DataHandleCmd(CommandInterface,object):
         return list(params[:3]) + [string.atof(str(s)) for s in params[3:]]
     
     def getMediaHashAndParam(self):
-        "从媒体采样数据中获取hash及参数"
+        "从媒体特征提取数据中获取hash及参数"
         _dir = self.view.filename
         _filename = _dir[-_dir[::-1].index("/"):_dir.index(".")]
         _aparam = self.handleSamplingParams(self.__aparams)
         _bparam = self.handleSamplingParams(self.__bparams)
         
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,"Ａ组采样过程:",True)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,"Ａ组特征提取过程:",True)
         _agvs = GetVideoSampling.GetVideoSampling(_filename,*_aparam)
         _asampling = _agvs.GetSampling()
         
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "B组采样过程:",True)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "B组特征提取过程:",True)
         _bgvs = GetVideoSampling.GetVideoSampling(_filename,*_bparam)
         _bsampling = _bgvs.GetSampling()
         

@@ -36,7 +36,7 @@ class GetVideoSampling:
                 for _single in _groupMap:
                     _pos = _rgm.GetRegion(_groupMap[_single])
                     
-                    showmsg = "采样了第" + str(_groupindex) + "组第" + str(_single) + "帧第" + str(_pos[0]) + "区第" + str(_pos[1]) + "单元"
+                    showmsg = "特征提取了第" + str(_groupindex) + "组第" + str(_single) + "帧第" + str(_pos[0]) + "区第" + str(_pos[1]) + "单元"
                     self.sendViewMsg(showmsg)
                     
                     _gsampling += _gsfs.GetSingleSampling(_single, self.__filename,*_pos)

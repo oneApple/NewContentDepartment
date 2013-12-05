@@ -33,6 +33,7 @@ class RecvFilename(MsgHandleInterface.MsgHandleInterface,object):
     
         showmsg = "开始审核返回文件(" + session.filename + ")"
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg,True)
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[session.filename,"接受审核返回"])
         
         import SendDhPAndPubkey
         _sdh = SendDhPAndPubkey.SendDhPAndPubkey()

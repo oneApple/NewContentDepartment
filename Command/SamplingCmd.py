@@ -23,12 +23,12 @@ class SamplingCmd(CommandInterface,object):
         
         _e = ExecuteFfmpeg.ExecuteFfmpeg(self.view.filename)
         _e.Run()
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, ["正在采样 . . .",False])
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, ["正在特征提取 . . .",False])
         _e.WaitForProcess()
         
         self.getFrameNumAndFileSize()
         filesize = float(self.__filesize) / (1024 * 1024)
-        showmsg = "采样完成:\n(1)总帧数：" + str(self.__framenum) + "\n(2)文件大小（MB）：" + str(filesize)
+        showmsg = "特征提取完成:\n(1)总帧数：" + str(self.__framenum) + "\n(2)文件大小（MB）：" + str(filesize)
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REWRITETEXT, [showmsg,True])
 
         

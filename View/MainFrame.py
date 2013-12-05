@@ -11,7 +11,7 @@ from DataBase import MediaTable
 class MyFrame(wx.Frame):
     def __init__(self, msg, netconnect):
         self.wcfg = WindowConfig.WindowConfig()
-        wx.Frame.__init__(self, None, -1, "内容提供部门", size=self.wcfg.GetFrameSize())
+        wx.Frame.__init__(self, None, -1, "内容保护子系统-互信系统", size=self.wcfg.GetFrameSize())
         self.__permission = msg[1]
         self.audituser = msg[0]
         
@@ -20,8 +20,8 @@ class MyFrame(wx.Frame):
         self.__hbox = wx.BoxSizer(wx.HORIZONTAL)
         self.__panel_top = wx.Panel(self)
         
-        self.createHeadStaticText(text="您好:" + msg[2] + ",欢迎使用CUCAuditSys!" + "\n")
-        self.createHeadStaticText(align=wx.ALIGN_LEFT, text="\n" + " 互信系统" + "\n", \
+        self.createHeadStaticText(text="您好:" + msg[2] + ",欢迎使用内容保护子系统-互信系统!" + "\n")
+        self.createHeadStaticText(align=wx.ALIGN_LEFT, text="\n" + " 内容提供部门" + "\n", \
                                   fontsize = self.wcfg.GetSystemNameFontSize(),\
                                   fontcolor = self.wcfg.GetSystemNameFontColor(),\
                                   backcolor = self.wcfg.GetSystemNameBackColor())
@@ -102,8 +102,8 @@ class MyFrame(wx.Frame):
         _recvmsg = recvmsg
         if type(recvmsg) != list:
             _recvmsg = recvmsg.data
-        showmsg = "当前正在处理文件:" + _recvmsg[0] + "\n"
-        showmsg += "当前正在进行操作:" + _recvmsg[1]
+        showmsg = "处理文件:" + _recvmsg[0] + "\n"
+        showmsg += "当前状态:" + _recvmsg[1]
         self.__infoStatic.SetLabel(showmsg)
     
     def refreshFileList(self, recvmsg=""):
@@ -187,7 +187,7 @@ class MyFrame(wx.Frame):
         stext.SetFont(self.wcfg.GetStaticTextFont())
         stext.SetForegroundColour(self.wcfg.GetStaticTextFontColor())
 
-        self.createBox([stext, ], _panel, hbox, "状态显示区")
+        self.createBox([stext, ], _panel, hbox, "操作结果区")
         
         return stext
     
@@ -234,14 +234,14 @@ class MyFrame(wx.Frame):
         _cmd.Excute() 
     
     def evtBtnSamplingClick(self, evt):
-        "触发采样"
+        "触发特征提取"
         try:
             _dir = self.filename
         except:
             return
         
         _filename = _dir[-_dir[::-1].index("/"):]
-        self.refreshStaticText([_filename, "采样"])
+        self.refreshStaticText([_filename, "预提取"])
         
         from SamplingProcessDialog import SamplingProcessDialog
         frame = SamplingProcessDialog(self.filename, self)
@@ -262,6 +262,14 @@ class MyFrame(wx.Frame):
         return aparams , bparams
     
     def evtBtnReqAuditClick(self, evt):
+        try:
+            _dir = self.filename
+        except:
+            return
+        
+        _filename = _dir[-_dir[::-1].index("/"):]
+        self.refreshStaticText([_filename, "请求审核"])
+        
         import DataHandleProcessDialog
         dlg = DataHandleProcessDialog.DataHandleProcessDialog(self)
         dlg.Run()
@@ -271,7 +279,7 @@ class MyFrame(wx.Frame):
         
         _Button1 = wx.Button(_panel, -1, "文件选择")
         self.Bind(wx.EVT_BUTTON, self.evtBtnChoseClick , _Button1)
-        _Button2 = wx.Button(_panel, -1, "采样")
+        _Button2 = wx.Button(_panel, -1, "预提取")
         self.Bind(wx.EVT_BUTTON, self.evtBtnSamplingClick , _Button2)
         _Button3 = wx.Button(_panel, -1, "请求审核")
         self.Bind(wx.EVT_BUTTON, self.evtBtnReqAuditClick , _Button3)

@@ -18,6 +18,7 @@ class RecvObtainFile(MsgHandleInterface.MsgHandleInterface,object):
         msglist = NetSocketFun.NetUnPackMsgBody(recvbuffer.encode("utf-8"))
         session.filename = self.__mediapath + "/auditserver/" + msglist[0]
         showmsg = "开始为 " + msglist[1]  +" 分发文件(" + msglist[0] + ")"
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[msglist[0],"正在分发文件"])
         session.peername = msglist[1]
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT,showmsg.encode("utf-8"),True)
         

@@ -14,6 +14,7 @@ class RecvSendMediaSuccess(MsgHandleInterface.MsgHandleInterface,object):
         _filename = session.filename[-session.filename[::-1].index("/"):].encode("utf-8")
         if session.threadtype == CommonData.ThreadType.ACCETPNO:
             self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "运营商端接收文件("+ _filename +")及参数成功",True)
+            self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[_filename,"分发文件完毕"])
             return
         
         _db = MediaTable.MediaTable()
@@ -22,3 +23,4 @@ class RecvSendMediaSuccess(MsgHandleInterface.MsgHandleInterface,object):
         _db.CloseCon()
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "服务端接收文件("+ _filename +")及参数成功",True)
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHFILETABLE,"")
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[_filename,"审核完毕"])
