@@ -23,4 +23,4 @@ class RecvSendMediaSuccess(MsgHandleInterface.MsgHandleInterface,object):
         _db.CloseCon()
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_APPENDTEXT, "服务端接收文件("+ _filename +")及参数成功",True)
         self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHFILETABLE,"")
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[_filename,"审核完毕"])
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[_filename,"发送审核文件成功"])

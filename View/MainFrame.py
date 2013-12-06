@@ -268,7 +268,7 @@ class MyFrame(wx.Frame):
             return
         
         _filename = _dir[-_dir[::-1].index("/"):]
-        self.refreshStaticText([_filename, "请求审核"])
+        self.refreshStaticText([_filename, "发送审核文件"])
         
         import DataHandleProcessDialog
         dlg = DataHandleProcessDialog.DataHandleProcessDialog(self)

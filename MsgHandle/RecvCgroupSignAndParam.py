@@ -190,9 +190,9 @@ class RecvCgroupSignAndParam(MsgHandleInterface.MsgHandleInterface,object):
                 _db.AlterMedia("status", MagicNum.MediaTablec.AUDIT,session.filename)
                 _db.CloseCon()
                 self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHFILETABLE,"")
-                self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[session.filename,"审核返回完毕"])
+                self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[session.filename,"审核返回成功"])
                 return
-        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[session.filename,"审核返回完毕"])
+        self.sendViewMsg(CommonData.ViewPublisherc.MAINFRAME_REFRESHSTATIC,[session.filename,"审核返回失败"])
         msghead = self.packetMsg(MagicNum.MsgTypec.IDENTITYVERIFYFAILED,0)
         NetSocketFun.NetSocketSend(session.sockfd,msghead)
         
